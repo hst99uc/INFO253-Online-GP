@@ -175,7 +175,9 @@
             if (invalid) invalid.focus();
             return;
           }
-          fields.forEach((field, index) => field.querySelector('.field-value').textContent = controls[index].value);
+          fields.forEach((field, index) => {
+            if (!controls[index].readOnly) field.querySelector('.field-value').textContent = controls[index].value;
+          });
           const nameField = section.querySelector('[data-key="name"] .field-value');
           if (nameField) root.querySelector('#summary-name').textContent = nameField.textContent;
           const enrolmentField = section.querySelector('[data-key="enrolment"] .field-value');
