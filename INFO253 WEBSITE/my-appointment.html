@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Home</title>
+        <title>My Appointment | Online GP</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styles.css">
@@ -25,7 +25,8 @@
             <a class="cta" href="my-appointment.html"><button>Book a GP</button></a>
         </header>
 
-        <section class="app-shell" aria-label="My Appointments prototype">
+        <div id="my-appointment-v1">
+            <section class="app-shell" aria-label="My Appointments prototype">
     <header class="topbar">
       <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>Online GP</div>
       <div class="account"><a href="my-profile.html">My Profile</a></div>
@@ -79,14 +80,14 @@
             </div>
             <div class="fields">
               <label>Available date
-                <select id="new-date">
+                <select id="new-date" aria-label="Available date">
                   <option value="2026-10-16">16 October 2026</option>
                   <option value="2026-10-20" selected>20 October 2026</option>
                   <option value="2026-10-21">21 October 2026</option>
                 </select>
               </label>
               <label>Available time
-                <select id="new-time">
+                <select id="new-time" aria-label="Available time">
                   <option>9:00 AM</option>
                   <option selected>11:30 AM</option>
                   <option>2:00 PM</option>
@@ -152,7 +153,7 @@
       }
 
       root.querySelector('#book-new').addEventListener('click', () => {
-        feedback.textContent = 'The Book Appointment flow would open from here.';
+        window.location.href = 'find-gp.html';
       });
       root.querySelector('#join-call').addEventListener('click', () => {
         feedback.textContent = 'The consultation room becomes available five minutes before the appointment.';

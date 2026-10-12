@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Home</title>
+        <title>My Profile | Online GP</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styles.css">
@@ -25,6 +25,7 @@
             <a class="cta" href="my-appointment.html"><button>Book a GP</button></a>
         </header>
 
+        <div id="my-profile-v1">
         <section class="app-shell" aria-label="My Profile prototype">
     <header class="topbar">
       <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>Online GP</div>
@@ -51,9 +52,9 @@
           </div>
           <div class="side-nav" aria-label="Account sections">
             <div class="active">My Profile</div>
-            <div>My Appointment</div>
-            <div>Prescriptions</div>
-            <div>Message</div>
+            <div><a href="my-appointment.html" style="color:inherit;text-decoration:none;display:block">My Appointment</a></div>
+            <div><a href="prescriptions.html" style="color:inherit;text-decoration:none;display:block">Prescriptions</a></div>
+            <div><a href="how-it-works.html#messages" style="color:inherit;text-decoration:none;display:block">Message</a></div>
           </div>
         </aside>
 
@@ -71,10 +72,10 @@
               <div class="field" data-key="name"><div class="field-label">Full name</div><div class="field-value">Elaine Chen</div><input aria-label="Full name" value="Elaine Chen" readonly aria-describedby="identity-note"></div>
               <div class="field"><div class="field-label">Date of birth</div><div class="field-value">14 March 2005</div><input aria-label="Date of birth" type="date" value="2005-03-14" readonly aria-describedby="identity-note"></div>
               <div class="field" data-key="email"><div class="field-label">Email</div><div class="field-value">elaine.chen@example.nz</div><input aria-label="Email" type="email" value="elaine.chen@example.nz"></div>
-              <div class="field"><div class="field-label">Phone</div><div class="field-value">021 456 7821</div><input aria-label="Phone" type="tel" pattern="[+0-9][0-9 ()-]{6,19}" title="Enter 7–20 characters using numbers, spaces, brackets, + or -." value="021 456 7821"></div>
+              <div class="field"><div class="field-label">Phone</div><div class="field-value">021 456 7821</div><input aria-label="Phone" type="tel" pattern="\+?[0-9][0-9 \(\)\-]{6,19}" title="Enter 7–20 characters using numbers, spaces, brackets, + or -." value="021 456 7821"></div>
               <div class="field"><div class="field-label">Address</div><div class="field-value">Riccarton, Christchurch</div><input aria-label="Address" value="Riccarton, Christchurch"></div>
               <div class="field"><div class="field-label">Emergency contact name</div><div class="field-value">Lina Chen</div><input aria-label="Emergency contact name" value="Lina Chen"></div>
-              <div class="field"><div class="field-label">Emergency contact phone</div><div class="field-value">021 774 120</div><input aria-label="Emergency contact phone" type="tel" pattern="[+0-9][0-9 ()-]{6,19}" title="Enter 7–20 characters using numbers, spaces, brackets, + or -." value="021 774 120"></div>
+              <div class="field"><div class="field-label">Emergency contact phone</div><div class="field-value">021 774 120</div><input aria-label="Emergency contact phone" type="tel" pattern="\+?[0-9][0-9 \(\)\-]{6,19}" title="Enter 7–20 characters using numbers, spaces, brackets, + or -." value="021 774 120"></div>
             </div>
             <p class="identity-note" id="identity-note">To protect your medical record, changes to your legal name or date of birth require identity verification through support.</p>
             <div class="feedback" id="personal-feedback" role="status" aria-live="polite"></div>
@@ -167,14 +168,16 @@
           const fields = [...section.querySelectorAll('.field')];
           const controls = fields.map(field => field.querySelector('input, select'));
           const empty = controls.some(control => !control.value.trim());
-          const invalid = controls.find(control => !control.validity.valid);
+          const invalid = controls.find(control => !control.validity.valid || (control.type === 'tel' && !/^\+?[0-9][0-9 ()-]{6,19}$/.test(control.value.trim())));
           if (empty || invalid) {
             const isPhone = invalid && invalid.type === 'tel';
             showFeedback(feedback, empty ? 'Please complete all fields.' : isPhone ? 'Please enter a valid phone number.' : 'Please enter a valid email address.', true);
             if (invalid) invalid.focus();
             return;
           }
-          fields.forEach((field, index) => field.querySelector('.field-value').textContent = controls[index].value);
+          fields.forEach((field, index) => {
+            if (!controls[index].readOnly) field.querySelector('.field-value').textContent = controls[index].value;
+          });
           const nameField = section.querySelector('[data-key="name"] .field-value');
           if (nameField) root.querySelector('#summary-name').textContent = nameField.textContent;
           const enrolmentField = section.querySelector('[data-key="enrolment"] .field-value');
