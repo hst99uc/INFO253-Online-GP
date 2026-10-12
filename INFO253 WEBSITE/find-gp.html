@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Find a GP</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header>
+            <img class="logo" src="images/logo_nav.png" alt="logo">
+            <nav>
+                <ul class="nav_links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="find-gp.html">Find GP</a></li>
+                    <li><a href="how-it-works.html">How it works</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="how-it-works.html#contact">Contact Us</a></li>
+                </ul>
+            </nav>
+            <a class="cta" href="login.html"><button>Sign in</button></a>
+            <a class="cta" href="my-appointment.html"><button>Book a GP</button></a>
+        </header>
+
+  <main id="main">
+    <header class="page-head">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a> / <span aria-current="page">Find a GP</span></nav>
+        <h1>Find a GP</h1>
+        <p class="lede">Choose a doctor who suits you, then pick a time. Every GP here is registered with the Medical Council of New Zealand.</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="wrap finder">
+        <!-- Filters -->
+        <form class="filters" id="filters" aria-label="Filter GPs" onsubmit="return false">
+          <h2>Filter</h2>
+
+          <div class="field">
+            <label for="f-name">GP name</label>
+            <input type="search" id="f-name" placeholder="For example: Chen" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label for="f-lang">Language</label>
+            <select id="f-lang"><option value="">Any language</option></select>
+          </div>
+
+          <fieldset>
+            <legend>GP gender</legend>
+            <div class="seg">
+              <label><input type="radio" name="gender" value="" checked><span>Any</span></label>
+              <label><input type="radio" name="gender" value="Female"><span>Female</span></label>
+              <label><input type="radio" name="gender" value="Male"><span>Male</span></label>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label for="f-interest">Area of interest</label>
+            <select id="f-interest"><option value="">Any area</option></select>
+          </div>
+
+          <label class="toggle" for="f-today">
+            Available today
+            <input type="checkbox" id="f-today">
+          </label>
+
+          <button type="button" class="link-btn" id="f-reset">Clear all filters</button>
+        </form>
+
+        <!-- Results -->
+        <div>
+          <div class="results-bar">
+            <p id="result-count" aria-live="polite"></p>
+            <div class="field">
+              <label for="f-sort">Sort by</label>
+              <select id="f-sort">
+                <option value="soonest">Soonest available</option>
+                <option value="name">Name (A to Z)</option>
+                <option value="experience">Most experience</option>
+              </select>
+            </div>
+          </div>
+          <div class="gp-list" id="gp-list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- GP profile + time picker -->
+  <dialog class="profile" id="profile" aria-labelledby="p-name">
+    <div class="profile-head">
+      <div class="avatar" id="p-avatar"></div>
+      <div>
+        <h2 id="p-name"></h2>
+        <p id="p-meta"></p>
+      </div>
+      <button class="close-btn" type="button" id="p-close" aria-label="Close">×</button>
+    </div>
+    <div class="profile-body">
+      <p id="p-bio"></p>
+      <h3>Languages</h3>
+      <p id="p-langs" style="margin:0"></p>
+      <h3>Areas of interest</h3>
+      <div class="gp-tags" id="p-tags"></div>
+      <h3>Choose a time</h3>
+      <div class="day-tabs chips" id="p-days" role="group" aria-label="Choose a day"></div>
+      <div class="slots" id="p-slots" role="group" aria-label="Available times"></div>
+      <div class="booking-summary" id="p-summary" hidden>
+        <p id="p-summary-text"></p>
+        <a class="btn" id="p-continue" href="book.html">Continue to booking</a>
+      </div>
+    </div>
+  </dialog>
+
+  <div data-include="footer"></div>
+  <script src="js/main.js"></script>
+  <script src="js/gp-data.js"></script>
+  <script src="js/find-gp.js"></script>
+
+    </body>
+</html>

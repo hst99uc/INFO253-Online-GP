@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Home</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header>
+            <img class="logo" src="images/logo_nav.png" alt="logo">
+            <nav>
+                <ul class="nav_links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="find-gp.html">Find GP</a></li>
+                    <li><a href="how-it-works.html">How it works</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="how-it-works.html#contact">Contact Us</a></li>
+                </ul>
+            </nav>
+            <a class="cta" href="login.html"><button>Sign in</button></a>
+            <a class="cta" href="my-appointment.html"><button>Book a GP</button></a>
+        </header>
+
+        <section class="app-shell" aria-label="My Appointments prototype">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>Online GP</div>
+      <div class="account"><a href="my-profile.html">My Profile</a></div>
+    </header>
+
+    <main>
+      <div class="page-heading">
+        <div>
+          <h1>My Appointment</h1>
+          <p class="subtitle">View and manage your upcoming GP consultations.</p>
+        </div>
+        <button class="primary" id="book-new" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Book New Appointment</button>
+      </div>
+
+      <div class="layout">
+        <section class="surface appointment-card" aria-labelledby="upcoming-title">
+          <div class="eyebrow">Upcoming appointment</div>
+          <div class="appointment-head">
+            <div class="doctor">
+              <span class="doctor-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/><path d="m17 11 2 2 3-3"/></svg></span>
+              <div>
+                <h2 id="upcoming-title" class="doctor-name">Dr Sarah Thompson</h2>
+                <p class="doctor-meta">NZ-registered General Practitioner · Registration verified</p>
+              </div>
+            </div>
+            <span class="status" id="appointment-status">Confirmed</span>
+          </div>
+
+          <div class="details">
+            <div class="detail"><div class="detail-label">Date</div><div class="detail-value" id="appointment-date">15 October 2026</div></div>
+            <div class="detail"><div class="detail-label">Time</div><div class="detail-value" id="appointment-time">10:30 AM</div></div>
+            <div class="detail"><div class="detail-label">Consultation type</div><div class="detail-value">Video consultation</div></div>
+            <div class="detail"><div class="detail-label">Consultation fee</div><div class="detail-value">NZ$45.00</div></div>
+          </div>
+
+          <div class="actions">
+            <button class="primary" id="join-call" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3z"/></svg>Join Consultation</button>
+            <button id="reschedule" type="button" aria-controls="reschedule-panel" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>Change Date &amp; Time</button>
+            <button class="danger" id="cancel" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M8 7l1 13h6l1-13"/></svg>Cancel Appointment</button>
+          </div>
+          <p class="helper-text">A secure video link will become available through Join Consultation 5 minutes before the appointment.</p>
+          <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+
+          <div class="reschedule-panel" id="reschedule-panel">
+            <div class="panel-heading">
+              <div>
+                <h3>Choose a new appointment time</h3>
+                <p class="helper-text">Only dates and times with available appointments are listed. Your consultation fee remains NZ$45.00. You can reschedule free of charge up to 2 hours before the appointment.</p>
+              </div>
+              <button id="close-reschedule" type="button">Keep Current Appointment</button>
+            </div>
+            <div class="fields">
+              <label>Available date
+                <select id="new-date">
+                  <option value="2026-10-16">16 October 2026</option>
+                  <option value="2026-10-20" selected>20 October 2026</option>
+                  <option value="2026-10-21">21 October 2026</option>
+                </select>
+              </label>
+              <label>Available time
+                <select id="new-time">
+                  <option>9:00 AM</option>
+                  <option selected>11:30 AM</option>
+                  <option>2:00 PM</option>
+                  <option>4:15 PM</option>
+                </select>
+              </label>
+              <button class="primary" id="confirm-reschedule" type="button">Confirm New Appointment</button>
+            </div>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="surface side-section" aria-labelledby="prepare-title">
+            <h2 id="prepare-title">Before your appointment</h2>
+            <div class="check-list">
+              <div class="check-item"><span class="check-dot"></span><span>Check that your camera and microphone are working.</span></div>
+              <div class="check-item"><span class="check-dot"></span><span>Prepare any relevant health information or medication details.</span></div>
+              <div class="check-item"><span class="check-dot"></span><span>Join the consultation five minutes early.</span></div>
+            </div>
+          </section>
+
+          <section class="surface side-section" aria-labelledby="past-title">
+            <h2 id="past-title">Past appointments</h2>
+            <div class="past-row">
+              <div><div class="past-main">Dr Michael Lee</div><div class="past-meta">22 September 2026 · General consultation</div></div>
+              <span class="past-status">Completed</span>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </main>
+
+    <div class="modal-backdrop" id="cancel-modal" role="dialog" aria-modal="true" aria-labelledby="cancel-title">
+      <div class="modal">
+        <h2 id="cancel-title">Cancel this appointment?</h2>
+        <p>This will cancel your consultation with Dr Sarah Thompson on <span id="modal-date">15 October 2026</span>.</p>
+        <p class="policy-note"><strong>Cancellation policy:</strong> You can cancel free of charge up to 2 hours before the appointment. Cancellations made within 2 hours are non-refundable (NZ$45.00).</p>
+        <div class="modal-actions">
+          <button id="keep-appointment" type="button">Keep Appointment</button>
+          <button class="danger" id="confirm-cancel" type="button">Confirm Cancellation</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (() => {
+      const root = document.getElementById('my-appointment-v1');
+      const feedback = root.querySelector('#feedback');
+      const panel = root.querySelector('#reschedule-panel');
+      const modal = root.querySelector('#cancel-modal');
+      const status = root.querySelector('#appointment-status');
+      const dateText = root.querySelector('#appointment-date');
+      const timeText = root.querySelector('#appointment-time');
+      const rescheduleButton = root.querySelector('#reschedule');
+      const actionButtons = ['#join-call', '#reschedule', '#cancel'].map(id => root.querySelector(id));
+
+      function closeReschedule() {
+        panel.classList.remove('open');
+        rescheduleButton.setAttribute('aria-expanded', 'false');
+        feedback.textContent = 'Rescheduling cancelled. Your original appointment is unchanged.';
+        rescheduleButton.focus();
+      }
+
+      root.querySelector('#book-new').addEventListener('click', () => {
+        feedback.textContent = 'The Book Appointment flow would open from here.';
+      });
+      root.querySelector('#join-call').addEventListener('click', () => {
+        feedback.textContent = 'The consultation room becomes available five minutes before the appointment.';
+      });
+      rescheduleButton.addEventListener('click', () => {
+        panel.classList.add('open');
+        rescheduleButton.setAttribute('aria-expanded', 'true');
+        feedback.textContent = 'Select a new available date and time.';
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        root.querySelector('#new-date').focus();
+      });
+      root.querySelector('#close-reschedule').addEventListener('click', closeReschedule);
+      root.querySelector('#confirm-reschedule').addEventListener('click', () => {
+        const dateValue = root.querySelector('#new-date').value;
+        const timeValue = root.querySelector('#new-time').value;
+        if (!dateValue) {
+          feedback.textContent = 'Please choose a date.';
+          return;
+        }
+        const formatted = new Intl.DateTimeFormat('en-NZ', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(dateValue + 'T12:00:00'));
+        dateText.textContent = formatted;
+        timeText.textContent = timeValue;
+        root.querySelector('#modal-date').textContent = formatted;
+        panel.classList.remove('open');
+        rescheduleButton.setAttribute('aria-expanded', 'false');
+        feedback.textContent = `Appointment rescheduled to ${formatted} at ${timeValue}.`;
+      });
+      root.querySelector('#cancel').addEventListener('click', () => {
+        modal.classList.add('open');
+        root.querySelector('#keep-appointment').focus();
+      });
+      root.querySelector('#keep-appointment').addEventListener('click', () => {
+        modal.classList.remove('open');
+        root.querySelector('#cancel').focus();
+      });
+      root.querySelector('#confirm-cancel').addEventListener('click', () => {
+        modal.classList.remove('open');
+        status.textContent = 'Cancelled';
+        status.classList.add('cancelled');
+        actionButtons.forEach(button => button.disabled = true);
+        panel.classList.remove('open');
+        rescheduleButton.setAttribute('aria-expanded', 'false');
+        feedback.textContent = 'Appointment cancelled. No cancellation fee applies because this appointment is more than 2 hours away. Use Book New Appointment to schedule another consultation.';
+        root.querySelector('#book-new').focus();
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        if (modal.classList.contains('open')) {
+          modal.classList.remove('open');
+          root.querySelector('#cancel').focus();
+        } else if (panel.classList.contains('open')) {
+          closeReschedule();
+        }
+      });
+    })();
+  </script>
+</div>
+
+    </body>
+</html>

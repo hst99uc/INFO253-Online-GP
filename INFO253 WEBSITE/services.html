@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Services</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header>
+            <img class="logo" src="images/logo_nav.png" alt="logo">
+            <nav>
+                <ul class="nav_links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="find-gp.html">Find GP</a></li>
+                    <li><a href="how-it-works.html">How it works</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="how-it-works.html#contact">Contact Us</a></li>
+                </ul>
+            </nav>
+            <a class="cta" href="login.html"><button>Sign in</button></a>
+            <a class="cta" href="my-appointment.html"><button>Book a GP</button></a>
+        </header>
+
+        <main id="main">
+    <header class="page-head">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a> / <span aria-current="page">Services</span></nav>
+        <h1>Services and fees</h1>
+        <p class="lede">What our GPs can help with online, what needs an in-person visit, and what it costs.</p>
+      </div>
+    </header>
+
+    <!-- Online checker -->
+    <section class="section">
+      <div class="wrap">
+        <div class="checker">
+          <div>
+            <h2>Can I be seen online?</h2>
+            <p>Type what you need help with. We'll tell you whether a video appointment is right, or where to go instead.</p>
+            <label for="check-input">Your concern</label>
+            <input type="search" id="check-input" placeholder="For example: sore throat" autocomplete="off" list="check-options">
+            <datalist id="check-options"></datalist>
+            <div class="suggest" id="check-suggest" role="group" aria-label="Common concerns"></div>
+          </div>
+          <div class="verdict" id="verdict" aria-live="polite">
+            <h3>Start typing to check</h3>
+            <p>Our GPs handle most everyday concerns by video, including infections, skin problems, repeat prescriptions and mental health.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Service list -->
+    <section class="section" style="padding-top:0" id="services">
+      <div class="wrap">
+        <div class="svc-toolbar">
+          <h2 style="margin:0">What we can help with</h2>
+          <div class="chips" id="svc-filter" role="group" aria-label="Filter services"></div>
+        </div>
+        <div class="svc-grid" id="svc-grid"></div>
+      </div>
+    </section>
+
+    <!-- Not online -->
+    <section class="section section-tint">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>When you need to be seen in person</h2>
+          <p>Some things can't be done safely over video. If your concern is on this list, see a local clinic or urgent care centre.</p>
+        </div>
+        <div class="not-online">
+          <ul>
+            <li>Chest pain, trouble breathing, or signs of stroke: call 111</li>
+            <li>Serious injuries, deep cuts or suspected broken bones</li>
+            <li>Vaccinations and immunisations</li>
+            <li>Cervical screening and other physical examinations</li>
+            <li>New prescriptions for controlled medicines, such as strong pain relief or ADHD medication</li>
+            <li>Driver licence medicals and pre-employment medicals</li>
+            <li>Babies under 3 months with a fever</li>
+            <li>Stitches, dressings and removing skin lesions</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fees -->
+    <section class="section" id="fees">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Fees</h2>
+          <p>You pay when you book. If we can't help online, we refund your appointment fee in full.</p>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="fees">
+            <caption class="visually-hidden">Appointment fees</caption>
+            <thead>
+              <tr>
+                <th scope="col">Appointment</th>
+                <th scope="col">Length</th>
+                <th scope="col" class="num">Enrolled patient</th>
+                <th scope="col" class="num">Casual patient</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Standard video or phone appointment</td><td>15 min</td><td class="num">$25</td><td class="num">$69</td></tr>
+              <tr><td>Long appointment (mental health, chronic conditions)</td><td>30 min</td><td class="num">$45</td><td class="num">$119</td></tr>
+              <tr><td>Repeat prescription (no appointment)</td><td>—</td><td class="num">$20</td><td class="num">$30</td></tr>
+              <tr><td>Medical certificate</td><td>10 min</td><td class="num">$25</td><td class="num">$45</td></tr>
+              <tr><td>Children under 14</td><td>15 min</td><td class="num free">Free</td><td class="num free">Free</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="fine">Prototype fees for a fictional clinic, shown in NZD including GST. Community Services Card holders pay the enrolled rate.</p>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="wrap">
+        <div class="cta-band">
+          <div>
+            <h2>Found the service you need?</h2>
+            <p>Choose a GP who suits you and book a time.</p>
+          </div>
+          <a class="btn" href="find-gp.html">Find a GP</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div data-include="footer"></div>
+  <script src="js/main.js"></script>
+  <script src="js/services.js"></script>
+
+    </body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Home</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header>
+            <img class="logo" src="images/logo_nav.png" alt="logo">
+            <nav>
+                <ul class="nav_links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="find-gp.html">Find GP</a></li>
+                    <li><a href="how-it-works.html">How it works</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="how-it-works.html#contact">Contact Us</a></li>
+                </ul>
+            </nav>
+            <a class="cta" href="login.html"><button>Sign in</button></a>
+            <a class="cta" href="my-appointment.html"><button>Book a GP</button></a>
+        </header>
+
+  <main id="main">
+    <header class="page-head">
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a> / <span aria-current="page">FAQ</span></nav>
+        <h1>Frequently asked questions</h1>
+        <p class="lede">Quick answers about appointments, prescriptions, fees and how we look after your information.</p>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="wrap faq-layout">
+        <aside class="faq-side" aria-label="FAQ topics">
+          <ul id="faq-topics"></ul>
+        </aside>
+
+        <div>
+          <div class="field faq-search">
+            <label for="faq-q">Search questions</label>
+            <input type="search" id="faq-q" placeholder="For example: prescription, refund, video" autocomplete="off">
+          </div>
+          <p class="faq-count" id="faq-count" aria-live="polite"></p>
+          <div id="faq-list"></div>
+
+          <div class="help-box">
+            <div>
+              <h3>Still have a question?</h3>
+              <p>Our support team replies within 2 hours, 7am to 10pm.</p>
+            </div>
+            <a class="btn" href="mailto:help@kowhaihealth.example">Email support</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div data-include="footer"></div>
+  <script src="js/main.js"></script>
+  <script src="js/faq.js"></script>
+
+    </body>
+</html>

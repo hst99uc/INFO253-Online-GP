@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Online GP · How it works, Messages, Contact us</title>
+<style>
+/* Layout: a calm public site with a sunrise motif, a patient portal (sidebar + workspace), and a clinician console; a dark prototype bar sits above everything and is not part of the site. */
+:root{
+  --ink:#0E2E33; --ink-2:#36545A; --muted:#5A7378;
+  --bg:#F2F6F5; --surface:#FFFFFF; --line:#D3E0DD; --line-2:#E6EEEC;
+  --teal:#0F7466; --teal-d:#0A574D; --teal-50:#E2F1ED;
+  --sun:#F2B33D; --sun-d:#8A5A00; --sun-50:#FDF1D6;
+  --red:#B42318; --red-50:#FDECEA; --ok:#1E7B3A; --ok-50:#E4F4E8;
+  --proto:#1B1F24; --proto-fg:#E9EEF0; --proto-mute:#9AA6AD;
+  --f-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Verdana", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r:10px; --r-lg:18px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+img{max-width:100%}
+html,body{background:var(--bg)}
+body{font-family:var(--f-body);font-size:17px;line-height:1.55;color:var(--ink);margin:0}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:clamp(2rem,4.6vw,3.3rem);font-weight:800}
+h2{font-size:clamp(1.5rem,2.8vw,2.1rem);font-weight:700}
+h3{font-size:1.2rem;font-weight:700}
+h4{font-size:1rem;font-weight:700}
+p{margin:0}
+a{color:var(--teal-d)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-radius:4px}
+.mono{font-family:var(--f-mono);font-size:.86em}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+.eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--teal-d)}
+.stack{display:flex;flex-direction:column;gap:var(--g,16px)}
+.row{display:flex;flex-wrap:wrap;gap:var(--g,12px);align-items:center}
+.wrap{max-width:1160px;margin:0 auto;padding-inline:20px}
+.section{padding-block:56px}
+.grid{display:grid;gap:var(--g,20px)}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px}
+.card.flat{border:none;background:transparent;padding:0}
+.tint{background:var(--teal-50);border-color:transparent}
+.sunbox{background:var(--sun-50);border-color:transparent}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;border:2px solid transparent;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .15s,border-color .15s,transform .1s}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:var(--teal-d)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--teal);color:var(--teal-d)}
+.btn-sun{background:var(--sun);color:var(--ink)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-sm{min-height:38px;padding:0 14px;font-size:.92rem}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.linkbtn{background:none;border:none;padding:0;color:var(--teal-d);text-decoration:underline;cursor:pointer;font-weight:700}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:.8rem;font-weight:700;background:var(--line-2);color:var(--ink-2);white-space:nowrap}
+.pill.ok{background:var(--ok-50);color:var(--ok)}
+.pill.warn{background:var(--sun-50);color:var(--sun-d)}
+.pill.bad{background:var(--red-50);color:var(--red)}
+.pill.teal{background:var(--teal-50);color:var(--teal-d)}
+.ico{width:1.15em;height:1.15em;flex:none;vertical-align:-.2em}
+.big-ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--teal-50);color:var(--teal-d);flex:none}
+.big-ico .ico{width:24px;height:24px}
+hr.sep{border:none;border-top:1px solid var(--line);margin:0}
+
+/* Prototype bar (not part of the site) */
+#proto{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--proto);color:var(--proto-fg);font-family:var(--f-mono);font-size:12.5px}
+#proto .in{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:7px 16px;max-width:1400px;margin:0 auto}
+#proto .tag{background:var(--sun);color:#1B1F24;font-weight:500;padding:2px 7px;border-radius:4px;letter-spacing:.06em}
+#proto select{background:#2A3037;color:var(--proto-fg);border:1px solid #3A424B;border-radius:6px;padding:4px 6px;font-family:var(--f-mono);font-size:12.5px;max-width:58vw}
+#proto button{background:#2A3037;color:var(--proto-fg);border:1px solid #3A424B;border-radius:6px;padding:4px 10px;cursor:pointer;font-family:var(--f-mono);font-size:12.5px}
+#proto button:hover{border-color:var(--sun)}
+#proto .sp{flex:1}
+#proto .note{color:var(--proto-mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1 1 220px}
+
+/* Public site chrome */
+.alertbar{background:var(--ink);color:#DCEAE7;font-size:.86rem}
+.alertbar .wrap{display:flex;gap:6px 18px;flex-wrap:wrap;padding-block:7px}
+.alertbar b{color:#fff}
+.sitehead{background:var(--surface);border-bottom:1px solid var(--line)}
+.sitehead .wrap{display:flex;align-items:center;gap:20px;min-height:74px;flex-wrap:wrap;padding-block:8px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-family:var(--f-display);font-weight:800;font-size:1.35rem;letter-spacing:-.02em;cursor:pointer;background:none;border:none;padding:0}
+.logo small{display:block;font-family:var(--f-body);font-weight:400;font-size:.72rem;letter-spacing:.02em;color:var(--muted);margin-top:-2px}
+.mainnav{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.mainnav a{padding:10px 12px;border-radius:8px;text-decoration:none;color:var(--ink-2);font-weight:700;font-size:.97rem}
+.mainnav a:hover{background:var(--teal-50);color:var(--teal-d)}
+.mainnav a[aria-current="page"]{color:var(--teal-d);box-shadow:inset 0 -3px 0 var(--teal)}
+.menubtn{display:none}
+@media (max-width:900px){
+  .mainnav{display:none;order:5;flex-basis:100%;flex-direction:column}
+  .mainnav.open{display:flex}
+  .menubtn{display:inline-flex}
+  .head-actions .signin{display:none}
+}
+.head-actions{display:flex;gap:10px;align-items:center;margin-left:auto}
+.crumbs{font-size:.88rem;color:var(--muted);padding-top:22px}
+.crumbs a{color:var(--muted)}
+.pagehead{padding-block:28px 8px}
+.pagehead p{max-width:62ch;margin-top:10px;font-size:1.08rem;color:var(--ink-2)}
+.sitefoot{background:var(--ink);color:#C9D9D6;margin-top:40px}
+.sitefoot .wrap{padding-block:44px;display:grid;gap:28px;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))}
+.sitefoot h4{color:#fff;margin-bottom:10px}
+.sitefoot a{color:#C9D9D6;display:block;padding:3px 0;text-decoration:none;cursor:pointer}
+.sitefoot a:hover{color:#fff;text-decoration:underline}
+.sitefoot .legal{grid-column:1/-1;border-top:1px solid #2A4A50;padding-top:18px;font-size:.84rem;color:#9FB7B3}
+
+/* Home */
+.hero{background:linear-gradient(180deg,var(--surface) 0%,var(--bg) 100%);border-bottom:1px solid var(--line);overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding-block:56px 64px}
+@media (max-width:860px){.hero .wrap{grid-template-columns:1fr}.hero-art{max-width:420px;justify-self:center}}
+.hero h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--sun) 62%,var(--sun) 92%,transparent 92%)}
+.hero .lede{font-size:1.18rem;color:var(--ink-2);max-width:52ch;margin-top:16px}
+.trust{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:26px;font-size:.95rem;color:var(--ink-2)}
+.trust span{display:inline-flex;align-items:center;gap:7px}
+.trust .ico{color:var(--teal)}
+.nextslot{display:inline-flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 8px;font-size:.95rem;margin-bottom:22px}
+.nextslot .dot{width:10px;height:10px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px var(--ok-50)}
+.hero-art svg{width:100%;height:auto;display:block;max-width:100%}
+.path-card{display:flex;flex-direction:column;gap:12px}
+.path-card .price{font-family:var(--f-display);font-size:1.9rem;font-weight:800}
+.path-card .price small{font-family:var(--f-body);font-size:.9rem;font-weight:400;color:var(--muted)}
+.steps{counter-reset:s;display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.steps li{list-style:none;counter-increment:s;display:flex;flex-direction:column;gap:8px}
+.steps li::before{content:counter(s);font-family:var(--f-display);font-weight:800;font-size:1.1rem;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--sun);color:var(--ink)}
+.steps{padding:0;margin:0}
+.cando li,.cannot li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line-2)}
+.cando ul,.cannot ul{list-style:none;margin:0;padding:0}
+.cando .ico{color:var(--ok);margin-top:3px}
+.cannot .ico{color:var(--sun-d);margin-top:3px}
+
+/* Doctors */
+.avatar{width:var(--s,56px);height:var(--s,56px);border-radius:50%;display:grid;place-items:center;background:var(--teal-50);color:var(--teal-d);font-family:var(--f-display);font-weight:800;font-size:calc(var(--s,56px)*.36);flex:none;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line)}
+.doc-card{display:flex;flex-direction:column;gap:14px}
+.doc-card .top{display:flex;gap:14px;align-items:center}
+.reg{display:inline-flex;align-items:center;gap:6px;font-size:.84rem;color:var(--ok);font-weight:700}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:.95rem}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;min-width:0}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-block:18px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field label,.label{font-weight:700;font-size:.95rem}
+.req{font-weight:700;font-size:.74rem;color:var(--red);background:var(--red-50);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px;letter-spacing:.02em}
+.opt{font-weight:700;font-size:.74rem;color:var(--muted);background:var(--line-2);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px}
+.hint{font-size:.86rem;color:var(--muted)}
+input[type=text],input[type=email],input[type=password],input[type=tel],input[type=date],select,textarea{min-height:48px;border:1.5px solid var(--line);border-radius:var(--r);padding:10px 12px;background:var(--surface);width:100%}
+textarea{min-height:96px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px var(--teal-50)}
+.check{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--surface);cursor:pointer}
+.check input{width:22px;height:22px;margin-top:2px;accent-color:var(--teal);flex:none}
+.check:has(input:checked){border-color:var(--teal);background:var(--teal-50)}
+.choice{display:flex;gap:12px;align-items:center;padding:14px 16px;border:1.5px solid var(--line);border-radius:var(--r-lg);background:var(--surface);cursor:pointer;text-align:left;width:100%}
+.choice:hover{border-color:var(--teal)}
+.choice[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-50);box-shadow:inset 0 0 0 1px var(--teal)}
+.choice .t{font-weight:700}
+.choice .d{font-size:.88rem;color:var(--muted)}
+
+/* Pricing */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--bg)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.calc-out{font-family:var(--f-display);font-size:2.6rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.breakdown{display:grid;grid-template-columns:1fr auto;gap:8px 16px;font-variant-numeric:tabular-nums}
+.breakdown .tot{font-weight:700;border-top:1px solid var(--line);padding-top:8px}
+
+/* Accordion */
+details.faq{border-bottom:1px solid var(--line)}
+details.faq summary{cursor:pointer;padding:16px 4px;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.faq summary::after{content:"+";font-family:var(--f-display);font-size:1.4rem;line-height:1;color:var(--teal)}
+details.faq[open] summary::after{content:"–"}
+details.faq p{padding:0 4px 16px;color:var(--ink-2);max-width:68ch}
+
+/* Portal */
+.portal{display:grid;grid-template-columns:250px 1fr;min-height:calc(100vh - 110px)}
+.side{background:var(--surface);border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:4px}
+.side a{display:flex;gap:12px;align-items:center;padding:11px 12px;border-radius:10px;text-decoration:none;color:var(--ink-2);font-weight:700;cursor:pointer}
+.side a:hover{background:var(--bg)}
+.side a[aria-current="page"]{background:var(--teal-50);color:var(--teal-d)}
+.side .who{padding:6px 12px 16px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.pmain{padding:28px clamp(16px,3vw,40px) 48px;min-width:0;max-width:1100px}
+@media (max-width:820px){
+  .portal{grid-template-columns:1fr}
+  .side{flex-direction:row;overflow-x:auto;border-right:none;border-bottom:1px solid var(--line);padding:8px 12px;gap:2px}
+  .side .who,.side .foot{display:none}
+  .side a{white-space:nowrap;padding:9px 12px}
+}
+.porthead{background:var(--surface);border-bottom:1px solid var(--line)}
+.porthead .in{display:flex;gap:16px;align-items:center;padding:10px 20px;flex-wrap:wrap}
+.stepper{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px;padding:0;list-style:none}
+.stepper li{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.92rem;color:var(--muted);padding:6px 14px 6px 6px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.stepper li b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--line-2);font-size:.85rem}
+.stepper li.on{color:var(--teal-d);border-color:var(--teal)}
+.stepper li.on b{background:var(--teal);color:#fff}
+.stepper li.done b{background:var(--ok-50);color:var(--ok)}
+.emergency{border:2px solid var(--red);background:var(--red-50);border-radius:var(--r-lg);padding:20px;display:flex;gap:14px}
+.emergency .ico{color:var(--red);width:28px;height:28px}
+.daychips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+.daychip{flex:none;min-width:84px;padding:10px 12px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;text-align:center;line-height:1.25}
+.daychip b{display:block;font-family:var(--f-display);font-size:1.25rem}
+.daychip small{display:block;font-size:.76rem;color:var(--muted)}
+.daychip[aria-pressed="true"]{border-color:var(--teal);background:var(--teal);color:#fff}
+.daychip[aria-pressed="true"] small{color:#D4EEE8}
+.daychip.full small{color:var(--red)}
+.slots{display:flex;flex-wrap:wrap;gap:8px}
+.slot{min-height:44px;padding:0 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;font-weight:700;font-variant-numeric:tabular-nums}
+.slot:hover{border-color:var(--teal)}
+.slot[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+.docslot{display:grid;grid-template-columns:auto 1fr;gap:14px 16px;align-items:start}
+@media (max-width:560px){.docslot{grid-template-columns:1fr}}
+.summary{position:sticky;top:60px}
+.apt{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center}
+@media (max-width:640px){.apt{grid-template-columns:auto 1fr}.apt .acts{grid-column:1/-1}}
+.datebox{width:64px;text-align:center;border-radius:12px;background:var(--teal-50);color:var(--teal-d);padding:8px 0;line-height:1.1}
+.datebox b{display:block;font-family:var(--f-display);font-size:1.5rem}
+.datebox small{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.checkrow{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line-2)}
+.spinner{width:18px;height:18px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--teal);animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spinner{animation:none}*{transition:none!important}}
+.preview{aspect-ratio:16/10;max-width:100%;border-radius:var(--r-lg);background:linear-gradient(160deg,#20454B,#0E2E33);display:grid;place-items:center;color:#CFE3DF;position:relative;overflow:hidden}
+.meter{display:flex;gap:3px;align-items:flex-end;height:22px}
+.meter i{width:5px;background:var(--line);border-radius:2px}
+.meter.live i{background:var(--teal)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:20px;overflow-x:auto}
+.tabs button{background:none;border:none;padding:12px 14px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--teal-d);border-bottom-color:var(--teal)}
+.toggle{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--line-2)}
+.switch{position:relative;width:52px;height:30px;flex:none}
+.switch input{opacity:0;width:100%;height:100%;margin:0;cursor:pointer;position:absolute;inset:0;z-index:1}
+.switch span{position:absolute;inset:0;border-radius:999px;background:var(--line);transition:background .15s}
+.switch span::after{content:"";position:absolute;left:4px;top:4px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.switch input:checked+span{background:var(--teal)}
+.switch input:checked+span::after{transform:translateX(22px)}
+.switch input:focus-visible+span{outline:3px solid var(--sun);outline-offset:2px}
+.doc-paper{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:28px;font-size:.95rem;box-shadow:0 8px 24px rgba(14,46,51,.08)}
+
+/* Call */
+.call{background:#0B2226;border-radius:var(--r-lg);overflow:hidden;color:#E4F0EE;display:grid;grid-template-columns:1fr 300px;min-height:520px}
+@media (max-width:900px){.call{grid-template-columns:1fr}}
+.stage{position:relative;display:grid;place-items:center;min-height:420px;background:radial-gradient(ellipse at 50% 30%,#24545B 0%,#0B2226 70%)}
+.selfview{position:absolute;right:16px;bottom:86px;width:150px;aspect-ratio:4/3;max-width:40%;border-radius:12px;background:#36565B;border:2px solid #0B2226;display:grid;place-items:center;font-size:.8rem}
+.controls{position:absolute;left:0;right:0;bottom:16px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.cbtn{width:52px;height:52px;border-radius:50%;border:none;background:#24464C;color:#fff;display:grid;place-items:center;cursor:pointer}
+.cbtn.off{background:#fff;color:#0B2226}
+.cbtn.end{background:var(--red);width:72px;border-radius:999px}
+.callside{background:#102D32;padding:18px;display:flex;flex-direction:column;gap:14px;font-size:.92rem}
+.callside .pill{background:#1D4248;color:#CFE3DF}
+.cap{background:#0B2226;border-radius:10px;padding:10px 12px;line-height:1.45}
+.cap b{color:var(--sun)}
+
+/* GP console */
+.gphead{background:var(--ink);color:#E4F0EE}
+.gphead .in{display:flex;gap:16px;align-items:center;padding:12px 20px;flex-wrap:wrap}
+.gphead .logo{color:#fff}
+.gphead .logo small{color:#9FB7B3}
+.gpmain{padding:24px 20px 48px;max-width:1300px;margin:0 auto}
+.queue td{vertical-align:middle}
+.queue tr.clickable{cursor:pointer}
+.queue tr.clickable:hover td{background:var(--teal-50)}
+.ws{display:grid;grid-template-columns:300px 1fr 320px;gap:18px;align-items:start}
+@media (max-width:1100px){.ws{grid-template-columns:1fr 1fr}.ws>.ws-notes{grid-column:1/-1;order:3}}
+@media (max-width:700px){.ws{grid-template-columns:1fr}}
+.ws .card{padding:18px}
+.ws h3{font-size:1.02rem;margin-bottom:10px}
+.ws ul{margin:0;padding-left:18px}
+.source{font-size:.78rem;color:var(--muted);border-top:1px dashed var(--line);margin-top:10px;padding-top:8px}
+.actionpanel{border:1.5px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px}
+.actionpanel.done{border-color:var(--ok);background:var(--ok-50)}
+
+/* Overlay */
+#overlay{position:fixed;inset:0;z-index:80;background:rgba(14,30,34,.55);display:flex;justify-content:center;align-items:flex-start;padding:max(24px,env(safe-area-inset-top)) 16px 24px;overflow-y:auto}
+#overlay .sheet{background:var(--surface);border-radius:var(--r-lg);max-width:1100px;width:100%;padding:28px;position:relative}
+#overlay .x{position:absolute;right:14px;top:14px}
+.tree{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));margin-top:20px}
+.tree .col{border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;background:var(--bg)}
+.tree .col h4{margin-bottom:10px;display:flex;gap:8px;align-items:center}
+.node{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-bottom:8px;cursor:pointer}
+.node:hover{border-color:var(--teal)}
+.node .n{font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
+.node .s{display:block;font-size:.78rem;color:var(--muted);margin-top:2px}
+.node.child{margin-left:16px;width:calc(100% - 16px)}
+.node.current{border-color:var(--teal);box-shadow:inset 0 0 0 1px var(--teal)}
+.swatches{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}
+.sw{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.sw div{height:72px}
+.sw p{padding:8px 10px;font-size:.85rem;line-height:1.35}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;z-index:90;display:flex;gap:10px;align-items:center;max-width:calc(100% - 32px);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.toast .ico{color:var(--sun)}
+.success{display:flex;gap:16px;align-items:flex-start}
+.success .big-ico{background:var(--ok-50);color:var(--ok)}
+
+.ownbtn{background:#2A3037;color:var(--proto-fg);border:1px solid #3A424B;border-radius:6px;padding:4px 10px;cursor:pointer;font-family:var(--f-mono);font-size:12.5px}
+.ownbtn[aria-current="page"]{background:var(--sun);color:#1B1F24;border-color:var(--sun)}
+.pathtabs{display:inline-flex;flex-wrap:wrap;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px}
+.pathtabs button{border:none;background:none;border-radius:999px;padding:10px 18px;font-weight:700;cursor:pointer;color:var(--ink-2);min-height:44px}
+.pathtabs button[aria-pressed="true"]{background:var(--teal);color:#fff}
+.journey{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.journey li{display:grid;grid-template-columns:56px 1fr;gap:18px;position:relative;padding-bottom:28px}
+.journey li:not(:last-child)::after{content:"";position:absolute;left:27px;top:56px;bottom:0;width:2px;background:var(--line)}
+.journey .num{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--sun);font-family:var(--f-display);font-weight:800;font-size:1.3rem}
+.journey .body{padding-top:8px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.journey .meta{display:flex;flex-wrap:wrap;gap:8px}
+.timeline{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;position:relative;margin-top:8px}
+.timeline::before{content:"";position:absolute;left:8%;right:8%;top:19px;height:2px;background:var(--line)}
+.timeline div{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;position:relative;padding-inline:6px}
+.timeline i{width:40px;height:40px;border-radius:50%;background:var(--surface);border:2px solid var(--teal);display:grid;place-items:center;color:var(--teal-d);font-style:normal}
+.timeline div.key i{background:var(--teal);color:#fff}
+.timeline b{font-family:var(--f-mono);font-size:.8rem;color:var(--teal-d)}
+@media (max-width:760px){.timeline{grid-template-columns:1fr;gap:14px}.timeline::before{left:19px;right:auto;top:10px;bottom:10px;width:2px;height:auto}.timeline div{flex-direction:row;text-align:left;align-items:flex-start;padding-inline:0}}
+.inbox{display:grid;grid-template-columns:300px 1fr;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);overflow:hidden;height:calc(100vh - 210px);min-height:540px}
+.ilist{border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:0;min-height:0;overflow-y:auto}
+.ilist .lhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:18px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:1}
+.iconbtn{width:44px;height:44px;border-radius:50%;border:none;background:var(--teal);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+.iconbtn:hover{background:var(--teal-d)}
+.ilist .tools{padding:14px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.thread-item{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:14px;border:none;border-bottom:1px solid var(--line-2);background:none;text-align:left;cursor:pointer;width:100%}
+.thread-item:hover{background:var(--bg)}
+.thread-item[aria-current="true"]{background:var(--teal-50);box-shadow:inset 3px 0 0 var(--teal)}
+.thread-item .top{display:flex;justify-content:space-between;gap:8px}
+.thread-item .prev{font-size:.88rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.thread-item.unread .who-n{font-weight:700}
+.thread-item.unread .top::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--teal);flex:none;margin-top:6px}
+.ithread{display:flex;flex-direction:column;min-width:0;min-height:0}
+.ithread .th-head{padding:16px 24px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.msgs{flex:1;min-height:0;padding:28px clamp(16px,4vw,48px);display:flex;flex-direction:column;gap:16px;background:var(--bg);overflow-y:auto}
+.bubble{max-width:min(72%,620px);padding:14px 16px;font-size:1.02rem;border-radius:16px;background:var(--surface);border:1px solid var(--line);line-height:1.5}
+.bubble.me{align-self:flex-end;background:var(--teal);color:#fff;border-color:var(--teal);border-bottom-right-radius:4px}
+.bubble.them{border-bottom-left-radius:4px}
+.bubble.sys{align-self:center;background:transparent;border:1px dashed var(--line);font-size:.86rem;color:var(--muted);max-width:90%;text-align:center}
+.bubble .st{display:block;font-size:.75rem;margin-top:6px;opacity:.8}
+.daysep{align-self:center;font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.attach{display:flex;gap:10px;align-items:center;margin-top:8px;padding:8px 10px;border-radius:10px;background:var(--bg);color:var(--ink);font-size:.88rem}
+.bubble.me .attach{background:rgba(255,255,255,.15);color:#fff}
+.reply{border-top:1px solid var(--line);padding:16px 24px;display:flex;flex-direction:column;gap:10px}
+.reply .bar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.reply textarea{min-height:56px;flex:1 1 260px}
+.backlink{display:none}
+@media (max-width:820px){
+  .inbox{grid-template-columns:1fr;height:calc(100vh - 150px)}
+  .ilist{border-right:none}
+  .inbox.has-thread .ilist{display:none}
+  .inbox:not(.has-thread) .ithread{display:none}
+  .backlink{display:inline-flex}
+}
+.contact-grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.ccard{display:flex;flex-direction:column;gap:12px}
+.ccard .big{font-family:var(--f-mono);font-size:1.2rem;font-weight:500}
+.copyrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.hours td,.hours th{padding:10px 12px}
+.complain{list-style:none;padding:0;margin:0;display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));counter-reset:c}
+.complain li{counter-increment:c;display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line)}
+.complain li::before{content:counter(c);font-family:var(--f-display);font-weight:800;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--sun-50);color:var(--sun-d)}
+.err{color:var(--red);font-size:.86rem;font-weight:700}
+input.invalid,select.invalid,textarea.invalid{border-color:var(--red)}
+.vs{width:100%;min-width:520px}
+.vs td:first-child{font-weight:700}
+
+/* ---- Medium-fidelity override: plainer, less polished ---- */
+:root{--ink:#222;--ink-2:#444;--muted:#666;--bg:#F4F4F4;--surface:#FFFFFF;--line:#CCCCCC;--line-2:#E2E2E2;--teal-50:#EDF4F3;--sun-50:#FFF7E3;
+ --f-display:Arial,Helvetica,sans-serif;--f-body:Arial,Helvetica,sans-serif;--f-mono:"Courier New",Courier,monospace;--r:3px;--r-lg:4px}
+body{font-size:16px;line-height:1.45}
+h1,h2,h3,h4{letter-spacing:0;font-weight:700}
+h1{font-size:2rem!important}
+h2{font-size:1.4rem}
+*:not(:focus-visible){box-shadow:none!important}
+.btn{border-radius:3px;min-height:40px;padding:0 16px;font-weight:700}
+.btn-ghost{background:#EFEFEF;border:1px solid #BBB}
+.pill{border-radius:3px;font-weight:400}
+.avatar{background:#DDDDDD;color:#555;border:none;font-family:Arial,sans-serif;font-weight:700}
+.big-ico{background:none;border:1px solid var(--line);border-radius:3px}
+.journey .num{background:#E6E6E6;border:1px solid #BBB;border-radius:50%;font-size:1.1rem;width:44px;height:44px}
+.journey li{grid-template-columns:44px 1fr}
+.journey li:not(:last-child)::after{left:21px;top:44px}
+.pathtabs{border-radius:3px;padding:0;gap:0}
+.pathtabs button{border-radius:0;border-right:1px solid var(--line);min-height:40px}
+.timeline i{border-width:1px;border-color:#999;color:#555}
+.timeline div.key i{background:#555}
+.bubble{border-radius:6px}
+.bubble.me{border-bottom-right-radius:6px}.bubble.them{border-bottom-left-radius:6px}
+.card{padding:18px}
+.tint,.sunbox{background:#F7F7F7;border:1px solid var(--line)}
+.eyebrow{color:var(--muted);letter-spacing:.04em}
+.mainnav a[aria-current="page"]{box-shadow:none!important;text-decoration:underline;text-underline-offset:6px}
+.thread-item[aria-current="true"]{background:#EAEAEA}
+.complain li::before{background:#E6E6E6;color:#333}
+input[type=text],input[type=email],input[type=tel],select,textarea{border:1px solid #AAA;min-height:40px;padding:8px}
+.section{padding-block:36px}
+.logo{font-weight:700}
+</style>
+</head>
+<body>
+<div id="proto" role="region" aria-label="Prototype controls (not part of the website)">
+  <div class="in">
+    <span class="tag">PROTOTYPE</span>
+    <span style="color:var(--proto-mute)">Theo Davies · my pages:</span>
+    <button class="ownbtn" data-go="how">How it works</button>
+    <button class="ownbtn" data-go="messages">Messages</button>
+    <button class="ownbtn" data-go="contact">Contact us</button>
+    <span class="note" id="protonote"></span>
+  </div>
+</div>
+<div id="app"></div>
+<div id="toast" class="toast" hidden role="status"></div>
+<script>
+/* ---------- Icons ---------- */
+const P={
+ video:'<path d="M3 7a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m16 10 5-3v10l-5-3"/>',
+ phone:'<path d="M5 3h3l2 5-2.5 1.5a11 11 0 0 0 7 7L16 14l5 2v3a2 2 0 0 1-2 2A17 17 0 0 1 3 5a2 2 0 0 1 2-2"/>',
+ pill:'<rect x="2.5" y="8.5" width="19" height="7" rx="3.5" transform="rotate(-35 12 12)"/><path d="m9.2 7.9 5.6 8.2"/>',
+ doc:'<path d="M6 2h8l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path d="M14 2v5h5M8 13h8M8 17h6"/>',
+ cal:'<rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+ shield:'<path d="M12 2.5 4 5.5v6c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10v-6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
+ check:'<path d="m4.5 12.5 5 5 10-11"/>',
+ alert:'<path d="M12 3 2 20h20z"/><path d="M12 10v4.5M12 17.5v.01"/>',
+ home:'<path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+ folder:'<path d="M3 6a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+ cam:'<path d="M3 8a2 2 0 0 1 2-2h2.5L9 4h6l1.5 2H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/>',
+ mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>',
+ spk:'<path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
+ wifi:'<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.7 16a5 5 0 0 1 6.6 0"/><circle cx="12" cy="19.2" r=".8"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ lock:'<rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>',
+ map:'<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+ heart:'<path d="M12 20s-8-4.7-8-10.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 2.5C20 15.3 12 20 12 20z"/>',
+ arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+ msg:'<path d="M4 5h16v11H9l-5 4z"/>',
+ menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+ x:'<path d="M6 6l12 12M18 6 6 18"/>',
+ refer:'<path d="M14 4h6v6M20 4l-8 8M10 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-4"/>',
+ bp:'<path d="M3 12h4l2-5 3 10 2-5h7"/>',
+ child:'<circle cx="12" cy="6" r="3"/><path d="M8 21v-6l-2-3 3-2h6l3 2-2 3v6"/>',
+ out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>'
+};
+const I=(n,cls='ico')=>`<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]||''}</svg>`;
+
+
+
+const OWN={
+ how:{title:'How it works',sup:'Ben use cases 1–3, Braeden, Elaine, Jerry use case 2: sets expectations, explains limits of online care, device check, prices per path'},
+ messages:{title:'Messages',sup:'Bolu: talk by text when speaking is hard · Milo: private, care-team-only · Josh: free follow-up questions · Jerry: sorts out questions outside call time'},
+ contact:{title:'Contact us',sup:'Elaine: real people, real contact details · Milo: privacy officer · Ben use case 2: support channels that answer · NZ complaints process'}
+};
+const S={page:'how',menu:false,path:'enrolled',
+ inbox:{sel:'t1',filter:'all',compose:false,draft:'',attach:null,newTo:'mere',newTopic:'Question about my treatment',newBody:'',newErr:false},
+ contact:{sent:null,err:{}}
+};
+const THREADS=[
+ {id:'t1',from:'Dr Mere Tipene',init:'MT',role:'Your GP',subject:'Checking in on your inhaler',unread:true,msgs:[
+   {who:'sys',t:'Follow-up from your consultation on Tue 6 Oct. Free to reply for 7 days.'},
+   {day:'Today'},
+   {who:'them',t:'Kia ora Sam, just checking the new inhaler is working. Have you had any coughing at night, or needed it more than 3 times this week?',time:'9:12 am'}
+ ]},
+ {id:'t2',from:'Prescriptions team',init:'Rx',role:'Online GP',subject:'Your repeat is ready to collect',unread:false,msgs:[
+   {day:'Yesterday'},
+   {who:'them',t:'Your salbutamol inhaler has been sent to Greenstone Pharmacy, Riccarton Rd. It’s usually ready within an hour. Bring photo ID when you collect it.',time:'4:41 pm'},
+   {who:'me',t:'Thanks! Can my flatmate pick it up for me?',time:'5:02 pm',st:'Read'},
+   {who:'them',t:'Yes, as long as they know your full name and date of birth. The pharmacy may ask them to sign for it.',time:'5:20 pm'}
+ ]},
+ {id:'t3',from:'Support team',init:'S',role:'Bookings, payments & tech',subject:'Receipt for your consultation',unread:false,msgs:[
+   {day:'Tue 15 Sep'},
+   {who:'them',t:'Here’s your receipt for your consultation with Dr Liam O’Connor. You were charged $25.00 to your Visa ending 4242.',time:'11:05 am',file:'Receipt-OGP-20260915.pdf'},
+ ]},
+ {id:'t4',from:'Records team',init:'R',role:'Online GP',subject:'Your records have arrived',unread:false,msgs:[
+   {day:'Mon 2 Feb'},
+   {who:'them',t:'We’ve received your health records from Avon Loop Medical Centre. Your GP can now see your history before each appointment. You can see who opens your record in My Profile → Privacy.',time:'2:30 pm'}
+ ]}
+];
+const RECIP={mere:'Dr Mere Tipene (your GP)',rx:'Prescriptions team',support:'Support team (bookings, payments, tech)',records:'Records team'};
+const RED=/chest pain|can'?t breathe|cannot breathe|struggling to breathe|suicid|kill myself|end my life|overdose|stroke|unconscious|severe bleeding/i;
+
+function alertbar(){return `<div class="alertbar"><div class="wrap"><span><b>Emergency?</b> Call 111</span><span>Free health advice 24/7: <b>Healthline 0800 611 116</b></span><span>Need to talk? Call or text <b>1737</b></span></div></div>`}
+function sunMark(s){return `<svg width="${s}" height="${s}" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#0F7466"/><path d="M8 27a12 12 0 0 1 24 0z" fill="#F2B33D"/><path d="M6 27h28" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><path d="M20 9v4M10 13.5l2.6 2.6M30 13.5l-2.6 2.6" stroke="#F2B33D" stroke-width="2.5" stroke-linecap="round"/></svg>`}
+function logo(sub='Aotearoa New Zealand'){return `<button class="logo" data-other="Home" aria-label="Online GP home">${sunMark(34)}<span>Online GP<small>${sub}</small></span></button>`}
+function sitehead(){
+  const nav=[['','Home'],['','Services'],['','Find GP'],['how','How it works'],['','FAQ'],['contact','Contact us']];
+  return `${alertbar()}<header class="sitehead"><div class="wrap">${logo()}
+   <nav class="mainnav ${S.menu?'open':''}" aria-label="Main">${nav.map(([id,t])=>id?`<a href="#${id}" data-go="${id}" ${S.page===id?'aria-current="page"':''}>${t}</a>`:`<a href="#" data-other="${t}">${t}</a>`).join('')}</nav>
+   <div class="head-actions"><button class="btn btn-ghost btn-sm signin" data-other="Sign In">Sign in</button><button class="btn btn-primary btn-sm" data-other="My Appointments">Book a GP</button>
+   <button class="btn btn-ghost btn-sm menubtn" data-act="menu" aria-expanded="${S.menu}" aria-label="Menu">${I('menu')}</button></div></div></header>`;
+}
+function sitefoot(){
+  return `<footer class="sitefoot"><div class="wrap">
+   <div class="stack" style="--g:10px">${logo().replace('class="logo"','class="logo" style="color:#fff"')}<p class="small">NZ-registered GPs by video or phone, 7am–10pm every day.</p></div>
+   <div><h4>Care</h4><a data-other="Services">Services</a><a data-other="Find GP">Find GP</a><a data-go="how">How it works</a></div>
+   <div><h4>Your account</h4><a data-other="Sign In">Sign in</a><a data-other="My Appointments">My appointments</a><a data-go="messages">Messages</a><a data-other="Prescriptions">Prescriptions</a><a data-other="Medical Certificates">Medical certificates</a><a data-other="My Profile">My profile</a></div>
+   <div><h4>Get in touch</h4><a data-go="contact">Contact us</a><a data-other="FAQ">FAQ</a></div>
+   <p class="legal">Online GP is a fictional clinic created for the INFO253 group project (University of Canterbury, 2026). Names, phone numbers, email addresses and prices are illustrative only. In an emergency call 111.</p>
+  </div></footer>`;
+}
+function pub(body,crumb){return sitehead()+`<main id="main"><div class="wrap crumbs"><a href="#" data-other="Home">Home</a> / ${crumb}</div>${body}</main>`+sitefoot()}
+
+/* ---------- How it works ---------- */
+const PATHS={
+ enrolled:{label:'Enrolled patient',price:'$25',priceNote:'per consultation (adults). Free for children under 14.',steps:[
+   ['Enrol once','About 3 minutes online. We ask your old practice for your records. Moving them across can take up to 3 working days, but you can book straight away.',['3 min','Free']],
+   ['Book a time','Choose video or phone, a doctor and a time. Most days there are times available the same day. You see the $25 fee before you confirm.',['Same day','$25']],
+   ['Check your device','A one-minute test of your camera, microphone and connection. If something isn’t working, support can help before your appointment starts.',['1 min']],
+   ['Talk to your GP','A 15-minute video or phone call. Your GP has already read your history, so you don’t need to start from scratch.',['15 min']],
+   ['After the call','Prescriptions go to your pharmacy. Notes, certificates and referrals appear in your account. You can message your GP free for 7 days afterwards.',['Free follow-up']]]},
+ casual:{label:'Casual visit',price:'$69',priceNote:'per consultation (adults). $49 for children under 14.',steps:[
+   ['Create an account','Just your name, date of birth and contact details. You keep your current GP and don’t need to transfer anything.',['2 min','Free']],
+   ['Book a time','Choose video or phone, a doctor and a time. The full $69 fee is shown before you confirm. Casual visits have no government funding.',['Same day','$69']],
+   ['Check your device','A one-minute test of your camera, microphone and connection.',['1 min']],
+   ['Talk to a GP','A 15-minute call. We don’t have your history, so have a list of your medicines and any conditions ready.',['15 min']],
+   ['After the call','Prescriptions go to your pharmacy. If you agree, we send the notes to your usual GP so they know what happened.',['Notes to your GP']]]},
+ acc:{label:'Injury (ACC)',price:'$15',priceNote:'you pay. ACC pays the rest, whether or not you’re enrolled.',steps:[
+   ['Book and choose "Injury"','Tell us roughly when and how it happened. Sprains, strains, minor cuts and bruises are all fine to start online.',['Same day']],
+   ['Check your device','Video is best for injuries so the doctor can see the area and how it moves.',['1 min','Video']],
+   ['Talk to a GP','The doctor assesses the injury and lodges your ACC claim (ACC45) during the call. You don’t have to fill anything in.',['15 min','Claim lodged']],
+   ['Pay your part','You pay a $15 co-payment after the call. ACC pays us the rest directly. Children under 14 are free.',['$15']],
+   ['Recovery','Get a referral to a physio or for an X-ray if you need one, and a medical certificate for time off work.',['Referrals']]]}
+};
+function vHow(){
+  const p=PATHS[S.path];
+  return pub(`
+  <div class="wrap pagehead"><p class="eyebrow">How it works</p><h1 style="margin-top:6px">See a GP without leaving home</h1>
+   <p>Most everyday health problems can be sorted on a video or phone call with a New Zealand-registered GP. Here's exactly what happens, what it costs, and when you'll need to be seen in person.</p></div>
+
+  <section class="section" style="padding-top:24px"><div class="wrap stack" style="--g:24px">
+   <div class="stack" style="--g:10px"><h2>Your steps</h2><p class="muted">The steps depend on how you use Online GP. Choose one:</p>
+    <div class="pathtabs" role="group" aria-label="How you'll use Online GP">${Object.entries(PATHS).map(([k,v])=>`<button data-act="path" data-v="${k}" aria-pressed="${S.path===k}">${v.label}</button>`).join('')}</div></div>
+   <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));--g:36px;align-items:start">
+    <ol class="journey" aria-label="Steps for ${p.label}">${p.steps.map((s,i)=>`<li><span class="num">${i+1}</span><div class="body"><h3>${s[0]}</h3><p class="muted">${s[1]}</p><div class="meta">${s[2].map(m=>`<span class="pill teal">${m}</span>`).join('')}</div></div></li>`).join('')}</ol>
+    <aside class="card tint stack summary" style="--g:12px;top:60px"><p class="eyebrow">${p.label}</p><p style="font-family:var(--f-display);font-size:2.6rem;font-weight:800;line-height:1">${p.price}</p><p>${p.priceNote}</p>
+     <ul class="stack small" style="--g:6px;margin:0;padding-left:18px"><li>Shown in full before you confirm</li><li>Charged after the call, not before</li><li>Free to cancel up to 2 hours before</li><li>If we can't help online, you don't pay</li></ul>
+     <button class="btn btn-primary" data-other="My Appointments">Book as ${p.label.toLowerCase().startsWith('injury')?'an injury':'a'+(S.path==='enrolled'?'n enrolled patient':' casual patient')}</button>
+     <button class="linkbtn small" data-other="Services" style="align-self:flex-start">See all services and prices</button></aside>
+   </div>
+  </div></section>
+
+  <section class="section" style="background:var(--surface);border-block:1px solid var(--line)"><div class="wrap stack" style="--g:22px">
+   <div><h2>On the day</h2><p class="muted" style="margin-top:6px">What a typical 15-minute video appointment at 2:40 pm looks like.</p></div>
+   <div class="timeline">
+    <div><i>${I('msg')}</i><b>1 day before</b><span class="small">Reminder text and email</span></div>
+    <div><i>${I('cam')}</i><b>Any time</b><span class="small">Run the device check</span></div>
+    <div><i>${I('clock')}</i><b>2:25 pm</b><span class="small">Text: "Your GP is nearly ready"</span></div>
+    <div><i>${I('home')}</i><b>2:30 pm</b><span class="small">Waiting room opens</span></div>
+    <div class="key"><i>${I('video')}</i><b>2:40 pm</b><span class="small">Your GP joins the call</span></div>
+    <div><i>${I('pill')}</i><b>Within 1 hour</b><span class="small">Prescription at your pharmacy, notes in your account</span></div>
+   </div>
+  </div></section>
+
+  <section class="section"><div class="wrap grid g2" style="--g:24px;align-items:start">
+   <div class="stack" style="--g:14px"><h2>Video or phone?</h2>
+    <div class="tablewrap"><table class="vs"><thead><tr><th></th><th>${I('video')} Video</th><th>${I('phone')} Phone</th></tr></thead><tbody>
+     <tr><td>Best for</td><td>Skin, eyes, injuries, children, anything the doctor should see</td><td>Prescriptions, certificates, test results, quick questions</td></tr>
+     <tr><td>You'll need</td><td>A phone, tablet or computer with a camera</td><td>Any phone</td></tr>
+     <tr><td>Price</td><td>Same</td><td>Same</td></tr>
+     <tr><td>If it drops out</td><td>The GP phones you straight away</td><td>The GP calls you back</td></tr>
+    </tbody></table></div>
+    <p class="small muted">You can switch from video to phone at any point, even during the call.</p>
+   </div>
+   <div class="card stack" style="--g:14px"><h2 style="font-size:1.5rem">What you'll need</h2>
+    <ul class="stack" style="--g:12px;list-style:none;padding:0;margin:0">
+     <li class="row" style="--g:12px;align-items:flex-start;flex-wrap:nowrap">${I('wifi')}<span>An internet connection. Mobile data (4G) is fine.</span></li>
+     <li class="row" style="--g:12px;align-items:flex-start;flex-wrap:nowrap">${I('map')}<span>To be in New Zealand at the time of your appointment.</span></li>
+     <li class="row" style="--g:12px;align-items:flex-start;flex-wrap:nowrap">${I('lock')}<span>A quiet, private spot where you're comfortable talking.</span></li>
+     <li class="row" style="--g:12px;align-items:flex-start;flex-wrap:nowrap">${I('pill')}<span>Your medicines nearby, or a list of them.</span></li>
+     <li class="row" style="--g:12px;align-items:flex-start;flex-wrap:nowrap">${I('child')}<span>For children under 16: a parent or guardian on the call with them.</span></li>
+    </ul>
+    <button class="btn btn-ghost btn-sm" data-other="My Appointments" style="align-self:flex-start">${I('cam')} Test my device now</button>
+   </div>
+  </div></section>
+
+  <section class="section" style="padding-top:0"><div class="wrap stack" style="--g:22px">
+   <div><h2>What we can and can't do online</h2><p class="muted" style="margin-top:6px;max-width:64ch">We'd rather be honest than guess. A GP on a screen can't touch, listen to your chest or measure your blood pressure, so we tell you when that matters.</p></div>
+   <div class="grid g3" style="--g:18px">
+    <div class="card stack cando" style="--g:8px"><h3>${I('check')} Good to start online</h3><ul>${['Repeat prescriptions','Medical certificates','Colds, flu, sore throats','UTIs and minor infections','Rashes, acne, eczema','Mental health check-ins','Contraception and sexual health','Sprains and minor injuries (ACC)'].map(x=>`<li>${I('check')}${x}</li>`).join('')}</ul></div>
+    <div class="card stack cannot" style="--g:8px"><h3>${I('alert')} Needs to be in person</h3><ul>${['Blood tests, swabs and smears','Stitches and wound care','Listening to your chest or heart','Vaccinations','Anything needing a physical exam'].map(x=>`<li>${I('alert')}${x}</li>`).join('')}</ul></div>
+    <div class="card sunbox stack" style="--g:10px"><h3>What about blood pressure and heart rate?</h3><p>If a measurement matters, your GP will:</p><ul class="stack small" style="--g:6px;margin:0;padding-left:18px"><li>talk you through a reading if you have a home cuff or smartwatch</li><li>send you to a pharmacy for a free blood pressure check</li><li>refer you to a clinic near you, with your notes sent ahead</li></ul><p><b>If we can't help you online, you don't pay for the consultation.</b></p></div>
+   </div>
+  </div></section>
+
+  <section class="section" style="padding-top:0"><div class="wrap grid g2" style="--g:24px;align-items:start">
+   <div class="stack" style="--g:4px"><h2 style="margin-bottom:10px">Common questions</h2>
+    ${[['Are the doctors real GPs?','Yes. Every doctor is a vocationally registered GP. Their Medical Council registration number is on their profile, so you can check it yourself.'],
+       ['Will the call be recorded?','No. If you choose to allow transcription when you book, an AI tool writes draft notes for your doctor, who checks them before saving. The audio is deleted after 24 hours. It’s off unless you turn it on.'],
+       ['What if I’m not good with technology?','Run the device check before your appointment. Support (0800 253 253) can talk you through it. You can also just choose a phone call.'],
+       ['Can I see the same doctor again?','Yes. Enrolled patients have a usual GP, and anyone can choose a doctor when they book.']]
+      .map((q,i)=>`<details class="faq" ${i===0?'open':''}><summary>${q[0]}</summary><p>${q[1]}</p></details>`).join('')}
+    <button class="linkbtn" data-other="FAQ" style="margin-top:12px;align-self:flex-start">More questions in our FAQ</button></div>
+   <div class="stack" style="--g:16px">
+    <div class="emergency">${I('alert')}<div class="stack" style="--g:6px"><b>Online GP is not for emergencies</b><p>Call <b>111</b> for chest pain, severe trouble breathing, signs of stroke, heavy bleeding, or if someone is unconscious.</p><p class="small">Thoughts of suicide? Call or text <b>1737</b>, any time.</p></div></div>
+    <div class="card tint stack" style="--g:12px"><h3>Ready when you are</h3><p>Same-day times with a New Zealand GP, from $25.</p><div class="row"><button class="btn btn-primary" data-other="My Appointments">Book an appointment</button><button class="btn btn-ghost" data-go="contact">Contact us</button></div></div>
+   </div>
+  </div></section>`,'How it works');
+}
+
+/* ---------- Messages ---------- */
+function porthead(){return `${alertbar()}<header class="porthead"><div class="in">${logo('Patient portal')}<span style="flex:1"></span><span class="pill ok">${I('check')} Enrolled · Health NZ funded</span><button class="btn btn-ghost btn-sm" data-go="how">${I('out')} Sign out</button></div></header>`}
+function portal(body){
+  const unread=THREADS.filter(t=>t.unread).length;
+  const items=[['My Appointments','cal'],['Messages','msg'],['Prescriptions','pill'],['Medical Certificates','doc'],['My Profile','user']];
+  return porthead()+`<div class="portal"><nav class="side" aria-label="Portal">
+   <div class="who"><div class="row" style="--g:10px"><span class="avatar" style="--s:42px">SP</span><div><b>Sam Patel</b><div class="small muted">NHI <span class="mono">ZZZ0016</span></div></div></div></div>
+   ${items.map(([t,ic])=>t==='Messages'?`<a href="#messages" data-go="messages" aria-current="page">${I(ic)}${t}${unread?`<span class="pill teal" style="margin-left:auto">${unread}</span>`:''}</a>`:`<a href="#" data-other="${t}">${I(ic)}${t}</a>`).join('')}
+   <div class="foot small muted" style="margin-top:auto;padding:16px 12px 0">Need help? <button class="linkbtn" data-go="contact">Contact us</button></div>
+  </nav><main class="pmain" id="main" style="max-width:none;padding-block:20px">${body}</main></div>`;
+}
+function bubble(m){
+  if(m.day) return `<span class="daysep">${m.day}</span>`;
+  if(m.who==='sys') return `<div class="bubble sys">${m.t}</div>`;
+  return `<div class="bubble ${m.who}">${esc(m.t)}${m.file?`<div class="attach">${I('doc')}<span>${esc(m.file)}</span></div>`:''}<span class="st">${m.time}${m.st?' · '+m.st:''}</span></div>`;
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function vMessages(){
+  const ib=S.inbox;
+  const list=THREADS.filter(t=>ib.filter==='all'||(ib.filter==='unread'&&t.unread)||(ib.filter==='gp'&&t.id==='t1'));
+  const t=THREADS.find(x=>x.id===ib.sel);
+  const flagged=RED.test(ib.compose?ib.newBody:ib.draft);
+  const urgent=flagged?`<div class="emergency" role="alert">${I('alert')}<div class="stack" style="--g:4px"><b>This sounds urgent. Please don't wait for a message.</b><p class="small">Call <b>111</b> now. If you're thinking about ending your life, call or text <b>1737</b>.</p></div></div>`:'';
+  let right='';
+  if(ib.compose){
+    right=`<div class="ithread"><div class="th-head"><button class="btn btn-ghost btn-sm backlink" data-act="back">← Inbox</button><h2 style="font-size:1.25rem">New message</h2></div>
+     <form class="stack" style="--g:16px;padding:18px" data-form="newmsg" novalidate>
+      <div class="grid g2" style="--g:14px">
+       <div class="field"><label for="n-to">To <span class="req">Required</span></label><select id="n-to" data-bind="inbox.newTo">${Object.entries(RECIP).map(([k,v])=>`<option value="${k}" ${ib.newTo===k?'selected':''}>${v}</option>`).join('')}</select></div>
+       <div class="field"><label for="n-topic">About</label><select id="n-topic" data-bind="inbox.newTopic">${['Question about my treatment','Test results','Prescription','Booking or payment','Technical problem','Something else'].map(o=>`<option ${ib.newTopic===o?'selected':''}>${o}</option>`).join('')}</select></div>
+      </div>
+      <div class="field"><label for="n-body">Message <span class="req">Required</span></label><textarea id="n-body" data-bind="inbox.newBody" data-live="1" class="${ib.newErr?'invalid':''}" placeholder="Write your question in your own words.">${esc(ib.newBody)}</textarea>${ib.newErr?'<span class="err">Write a message before sending.</span>':''}<span class="hint">${ib.newTo==='mere'?'Free if it’s about a consultation in the last 7 days. A new problem needs an appointment.':'Our team replies within 1 working day, usually sooner.'}</span></div>
+      <div id="urgent-slot">${urgent}</div>
+      <div class="row"><label class="btn btn-ghost btn-sm" for="n-file" style="cursor:pointer">${I('cam')} Add a photo or file</label><input id="n-file" type="file" accept="image/*,.pdf" data-act="file" style="position:absolute;left:-9999px"><span class="small muted">${ib.attach?esc(ib.attach):'For example, a photo of a rash. Max 10 MB.'}</span></div>
+      <div class="row" style="justify-content:space-between;border-top:1px solid var(--line);padding-top:16px"><span class="small muted">${I('lock')} Only ${ib.newTo==='mere'?'Dr Tipene and the nurses in your care team':'the '+RECIP[ib.newTo].split(' (')[0]} can read this.</span><div class="row"><button type="button" class="btn btn-ghost" data-act="discard">Discard</button><button class="btn btn-primary" type="submit">Send message</button></div></div>
+     </form></div>`;
+  } else if(t){
+    right=`<div class="ithread"><div class="th-head"><button class="btn btn-ghost btn-sm backlink" data-act="back">← Inbox</button><span class="avatar" style="--s:52px">${t.init}</span><div style="flex:1;min-width:160px"><h2 style="font-size:1.3rem">${t.subject}</h2><p class="small muted">${t.from} · ${t.role}</p></div>${t.id==='t1'?'<span class="pill teal">Free follow-up · 7 days left</span>':''}</div>
+     <div class="msgs" id="msgs" aria-live="polite">${t.msgs.map(bubble).join('')}</div>
+     <form class="reply" data-form="reply">
+      <div id="urgent-slot">${urgent}</div>
+      <label for="r-body" class="small muted">Reply to ${t.from}</label>
+      <div class="bar"><textarea id="r-body" data-bind="inbox.draft" data-live="1" placeholder="Write a reply">${esc(ib.draft)}</textarea><button class="btn btn-primary" type="submit">Send</button></div>
+      <div class="row small muted" style="--g:8px"><label for="r-file" class="linkbtn" style="cursor:pointer;font-weight:400">${I('cam')} Attach a photo</label><input id="r-file" type="file" accept="image/*,.pdf" data-act="file" style="position:absolute;left:-9999px">${ib.attach?`<span>${esc(ib.attach)}</span>`:''}<span>· Replies within 1 working day · Not for emergencies</span></div>
+     </form></div>`;
+  }
+  return portal(`<div class="inbox ${ib.compose||t?'has-thread':''}">
+    <div class="ilist"><div class="lhead"><h1 style="font-size:1.6rem">Messages</h1><button class="iconbtn" data-act="compose" aria-label="New message" title="New message">${I('msg')}</button></div>
+     ${list.length?list.map(x=>{const last=[...x.msgs].reverse().find(m=>m.t&&m.who!=='sys');return `<button class="thread-item ${x.unread?'unread':''}" data-act="open" data-v="${x.id}" aria-current="${!ib.compose&&ib.sel===x.id}"><span class="avatar" style="--s:42px">${x.init}</span><span style="min-width:0;display:flex;flex-direction:column;gap:2px"><span class="top"><span class="who-n">${x.from}</span></span><span class="small" style="font-weight:700">${x.subject}</span><span class="prev">${last?(last.who==='me'?'You: ':'')+esc(last.t):''}</span></span></button>`}).join(''):`<p class="muted small" style="padding:18px">No unread messages.</p>`}
+     <p class="small muted" style="padding:16px;margin-top:auto">${I('lock')} Encrypted and kept in your health record. Not checked after 10pm. For anything urgent call 111.</p>
+    </div>
+    ${right||`<div class="ithread" style="display:grid;place-items:center;padding:30px"><p class="muted">Choose a conversation.</p></div>`}
+   </div>`);
+}
+
+/* ---------- Contact ---------- */
+function vContact(){
+  const c=S.contact, e=c.err;
+  const form=c.sent?`<div class="card stack" style="--g:14px"><div class="success"><div class="big-ico">${I('check')}</div><div class="stack" style="--g:4px"><h3>Thanks, we've got your message</h3><p>Your reference is <b class="mono">${c.sent.ref}</b>. We'll reply by ${c.sent.via} within 1 working day.</p></div></div><button class="btn btn-ghost btn-sm" data-act="newcontact" style="align-self:flex-start">Send another message</button></div>`
+  :`<form class="card stack" style="--g:16px" data-form="contact" novalidate>
+     <h3>Send us a message</h3>
+     <div class="field"><label for="c-topic">What's it about? <span class="req">Required</span></label><select id="c-topic" class="${e.topic?'invalid':''}"><option value="">Choose a topic</option>${['Booking, changing or cancelling','Payment or a receipt','Technical problem','Enrolling or transferring records','Privacy or my information','Feedback or a complaint','Something else'].map(o=>`<option>${o}</option>`).join('')}</select>${e.topic?'<span class="err">Choose a topic so we can send this to the right team.</span>':''}</div>
+     <div class="grid g2" style="--g:14px">
+      <div class="field"><label for="c-name">Your name <span class="req">Required</span></label><input id="c-name" type="text" autocomplete="name" class="${e.name?'invalid':''}">${e.name?'<span class="err">Enter your name.</span>':''}</div>
+      <div class="field"><label for="c-email">Email <span class="req">Required</span></label><input id="c-email" type="email" autocomplete="email" class="${e.email?'invalid':''}">${e.email?'<span class="err">Enter an email address like name@example.co.nz.</span>':''}</div>
+      <div class="field"><label for="c-phone">Phone <span class="opt">Optional</span></label><input id="c-phone" type="tel" autocomplete="tel"></div>
+      <div class="field"><label for="c-via">How should we reply?</label><select id="c-via"><option value="email">Email</option><option value="phone">Phone call</option></select></div>
+     </div>
+     <div class="field"><label for="c-msg">Message <span class="req">Required</span></label><textarea id="c-msg" class="${e.msg?'invalid':''}"></textarea>${e.msg?'<span class="err">Tell us how we can help.</span>':''}<span class="hint">Please don't include medical details here. If you're a patient, use <button type="button" class="linkbtn" data-go="messages" style="font-weight:400">secure messages</button> instead.</span></div>
+     <div class="row"><button class="btn btn-primary" type="submit">Send message</button><span class="small muted">We reply within 1 working day.</span></div>
+    </form>`;
+  return pub(`
+  <div class="wrap pagehead"><p class="eyebrow">Contact us</p><h1 style="margin-top:6px">Talk to a real person</h1><p>We're an online clinic, so there's no front desk. Our support team is in New Zealand and available 7am–10pm, every day. Choose what you need help with below.</p></div>
+  <section class="section" style="padding-top:20px"><div class="wrap stack" style="--g:32px">
+   <div class="emergency">${I('alert')}<div class="stack" style="--g:6px"><b>Need help right now?</b><p>Emergency: call <b>111</b> · Free health advice 24/7: <b>Healthline 0800 611 116</b> · Mental health support: call or text <b>1737</b></p></div></div>
+
+   <div class="contact-grid">
+    <div class="card ccard"><div class="big-ico">${I('msg')}</div><h3>A question for your doctor</h3><p class="muted">Follow-up questions, test results or how a medicine is working. Your care team replies within 1 working day.</p><button class="btn btn-primary btn-sm" data-go="messages" style="align-self:flex-start;margin-top:auto">Open secure messages</button><p class="small muted">You'll need to sign in.</p></div>
+    <div class="card ccard"><div class="big-ico">${I('phone')}</div><h3>Bookings, payments or tech help</h3><p class="muted">Support can't give medical advice, but can help with everything else.</p>
+     <div class="copyrow"><span class="big" id="ph">0800 253 253</span><button class="btn btn-ghost btn-sm" data-act="copy" data-v="0800 253 253">Copy</button></div>
+     <p class="small"><span class="pill ok">Open now</span> 7am–10pm daily · usual wait about 3 minutes</p></div>
+    <div class="card ccard"><div class="big-ico">${I('doc')}</div><h3>Email us</h3><p class="muted">For anything that isn't urgent. Please don't email medical details.</p>
+     <div class="copyrow"><span class="big" style="font-size:1rem">help@onlinegp.example</span><button class="btn btn-ghost btn-sm" data-act="copy" data-v="help@onlinegp.example">Copy</button></div>
+     <p class="small muted">Replies within 1 working day.</p></div>
+   </div>
+
+   <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));--g:24px;align-items:start">
+    ${form}
+    <div class="stack" style="--g:18px">
+     <div class="card stack" style="--g:10px"><h3>Opening hours</h3>
+      <div class="tablewrap" style="border:none"><table class="hours" style="min-width:0"><tbody>
+       <tr><td>GP appointments</td><td class="num">7am–10pm, every day</td></tr>
+       <tr><td>Phone support</td><td class="num">7am–10pm, every day</td></tr>
+       <tr><td>Secure messages</td><td class="num">Answered within 1 working day</td></tr>
+       <tr><td>Public holidays</td><td class="num">Open, except Christmas Day</td></tr>
+      </tbody></table></div></div>
+     <div class="card stack" style="--g:12px"><h3>Other enquiries</h3>
+      <dl class="kv" style="gap:10px 18px">
+       <dt>Privacy officer</dt><dd><span class="mono small">privacy@onlinegp.example</span><div class="small muted">Ask for a copy of your records or a correction</div></dd>
+       <dt>Clinics & records</dt><dd><span class="mono small">records@onlinegp.example</span><div class="small muted">Practices sending or requesting patient records</div></dd>
+       <dt>Work with us</dt><dd><span class="mono small">careers@onlinegp.example</span><div class="small muted">NZ-registered GPs and nurses</div></dd>
+       <dt>Media</dt><dd><span class="mono small">media@onlinegp.example</span></dd>
+      </dl></div>
+    </div>
+   </div>
+
+   <div class="stack" style="--g:16px"><h2>Feedback and complaints</h2><p class="muted" style="max-width:66ch">We want to hear when something goes wrong. This is how a complaint is handled, under the Code of Health and Disability Services Consumers' Rights.</p>
+    <ol class="complain">
+     <li><b>Tell us</b><span class="small muted">Use the form above, email, or phone support. You can make a complaint on behalf of someone else.</span></li>
+     <li><b>We acknowledge it</b><span class="small muted">Within 5 working days, with the name of the person handling it.</span></li>
+     <li><b>We look into it</b><span class="small muted">We'll talk to you and the people involved, and keep you updated.</span></li>
+     <li><b>Still not happy?</b><span class="small muted">You can contact the <a href="https://www.hdc.org.nz/" target="_blank" rel="noopener">Health and Disability Commissioner</a>, which is free and independent.</span></li>
+    </ol></div>
+  </div></section>`,'Contact us');
+}
+
+/* ---------- Router ---------- */
+const VIEWS={how:vHow,messages:vMessages,contact:vContact};
+const app=document.getElementById('app');
+function render(keep){const y=window.scrollY;app.innerHTML=VIEWS[S.page]();document.querySelectorAll('.ownbtn').forEach(b=>b.setAttribute('aria-current',b.dataset.go===S.page?'page':'false'));document.getElementById('protonote').textContent='Supports: '+OWN[S.page].sup;if(keep)window.scrollTo(0,y);const m=document.getElementById('msgs');if(m)m.scrollTop=m.scrollHeight}
+function go(id){if(!VIEWS[id])return;S.page=id;S.menu=false;try{history.replaceState(null,'','#'+id)}catch(e){}render();window.scrollTo(0,0);const m=document.getElementById('main');if(m){m.setAttribute('tabindex','-1');m.focus({preventScroll:true})}}
+let tt;function toast(msg){const t=document.getElementById('toast');t.innerHTML=I('check')+'<span>'+msg+'</span>';t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,3800)}
+function setPath(p,v){const k=p.split('.');let o=S;for(let i=0;i<k.length-1;i++)o=o[k[i]];o[k.at(-1)]=v}
+function nowTime(){return '10:'+String(14+Math.floor(Math.random()*40)).padStart(2,'0')+' am'}
+const ACT={
+ menu(){S.menu=!S.menu;render(true)},
+ path(el){S.path=el.dataset.v;render(true)},
+ open(el){const t=THREADS.find(x=>x.id===el.dataset.v);t.unread=false;S.inbox.sel=t.id;S.inbox.compose=false;S.inbox.draft='';S.inbox.attach=null;render(true)},
+ back(){S.inbox.sel=null;S.inbox.compose=false;render(true)},
+ ifilter(el){S.inbox.filter=el.dataset.v;render(true)},
+ compose(){Object.assign(S.inbox,{compose:true,newBody:'',newErr:false,attach:null});render(true);document.getElementById('n-body')?.focus()},
+ discard(){S.inbox.compose=false;S.inbox.sel=S.inbox.sel||'t1';render(true)},
+ copy(el){const v=el.dataset.v;(navigator.clipboard?navigator.clipboard.writeText(v):Promise.reject()).then(()=>toast('Copied '+v)).catch(()=>toast('Select the text to copy it: '+v))},
+ newcontact(){S.contact={sent:null,err:{}};render(true)}
+};
+document.addEventListener('click',e=>{
+ const o=e.target.closest('[data-other]');
+ if(o){e.preventDefault();toast(`"${o.dataset.other}" is built by another team member. It's in the full group prototype.`);return}
+ const g=e.target.closest('[data-go]');
+ if(g){e.preventDefault();go(g.dataset.go);return}
+ const a=e.target.closest('[data-act]');
+ if(a&&ACT[a.dataset.act]&&a.type!=='file'){e.preventDefault();ACT[a.dataset.act](a,e)}
+});
+document.addEventListener('change',e=>{
+ const el=e.target;
+ if(el.type==='file'){S.inbox.attach=el.files[0]?el.files[0].name:null;render(true);return}
+ if(el.dataset.bind&&!el.dataset.live){setPath(el.dataset.bind,el.value);render(true)}
+});
+document.addEventListener('input',e=>{
+ const el=e.target;
+ if(el.dataset.live){setPath(el.dataset.bind,el.value);const slot=document.getElementById('urgent-slot');const hit=RED.test(el.value);if(slot&&hit!==!!slot.innerHTML.trim()){slot.innerHTML=hit?`<div class="emergency" role="alert">${I('alert')}<div class="stack" style="--g:4px"><b>This sounds urgent. Please don't wait for a message.</b><p class="small">Call <b>111</b> now. If you're thinking about ending your life, call or text <b>1737</b>.</p></div></div>`:''}}
+});
+document.addEventListener('submit',e=>{
+ e.preventDefault();const f=e.target.dataset.form;const ib=S.inbox;
+ if(f==='reply'){
+  if(!ib.draft.trim()&&!ib.attach){document.getElementById('r-body').focus();return}
+  const t=THREADS.find(x=>x.id===ib.sel);const last=t.msgs.filter(m=>m.day).at(-1);
+  if(!last||last.day!=='Today')t.msgs.push({day:'Today'});
+  t.msgs.push({who:'me',t:ib.draft.trim()||'Photo attached',file:ib.attach,time:nowTime(),st:'Delivered'});
+  ib.draft='';ib.attach=null;render(true);
+  setTimeout(()=>{t.msgs.at(-1).st='Read';t.msgs.push({who:'sys',t:`${t.from.split(' ').slice(0,2).join(' ')} has seen your message and usually replies within a few hours.`});if(S.page==='messages'&&ib.sel===t.id)render(true)},2200);
+ }
+ if(f==='newmsg'){
+  if(!ib.newBody.trim()){ib.newErr=true;render(true);document.getElementById('n-body').focus();return}
+  const id='t'+Date.now();const name=RECIP[ib.newTo].split(' (')[0];
+  THREADS.unshift({id,from:name,init:ib.newTo==='mere'?'MT':name[0],role:ib.newTo==='mere'?'Your GP':'Online GP',subject:ib.newTopic,unread:false,msgs:[{day:'Today'},{who:'me',t:ib.newBody.trim(),file:ib.attach,time:nowTime(),st:'Delivered'},{who:'sys',t:'Sent. You’ll get a text when there’s a reply.'}]});
+  Object.assign(ib,{compose:false,sel:id,newBody:'',attach:null,newErr:false});render(true);toast('Message sent securely');
+ }
+ if(f==='contact'){
+  const v=id=>document.getElementById(id).value.trim();
+  const err={topic:!v('c-topic'),name:!v('c-name'),email:!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('c-email')),msg:!v('c-msg')};
+  if(Object.values(err).some(Boolean)){
+   const vals={topic:v('c-topic'),name:v('c-name'),email:v('c-email'),phone:v('c-phone'),via:v('c-via'),msg:v('c-msg')};
+   S.contact.err=err;render(true);
+   document.getElementById('c-topic').value=vals.topic;document.getElementById('c-name').value=vals.name;document.getElementById('c-email').value=vals.email;document.getElementById('c-phone').value=vals.phone;document.getElementById('c-via').value=vals.via;document.getElementById('c-msg').value=vals.msg;
+   document.querySelector('.invalid')?.focus();return}
+  S.contact={sent:{ref:'CU-20261006-'+(1000+Math.floor(Math.random()*9000)),via:v('c-via')==='phone'?'phone':'email'},err:{}};render(true);
+ }
+});
+const start=(location.hash||'').slice(1);if(VIEWS[start])S.page=start;
+render();
+
+</script>
+</body>
+</html>

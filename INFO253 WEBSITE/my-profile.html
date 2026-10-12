@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Home</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header>
+            <img class="logo" src="images/logo_nav.png" alt="logo">
+            <nav>
+                <ul class="nav_links">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="find-gp.html">Find GP</a></li>
+                    <li><a href="how-it-works.html">How it works</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="how-it-works.html#contact">Contact Us</a></li>
+                </ul>
+            </nav>
+            <a class="cta" href="login.html"><button>Sign in</button></a>
+            <a class="cta" href="my-appointment.html"><button>Book a GP</button></a>
+        </header>
+
+        <section class="app-shell" aria-label="My Profile prototype">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>Online GP</div>
+      <div class="account"><a href="my-appointment.html">My Appointment</a></div>
+    </header>
+
+    <main>
+      <div class="page-heading">
+        <div>
+          <h1>My Profile</h1>
+          <p class="subtitle">Manage your personal details and healthcare preferences.</p>
+        </div>
+      </div>
+
+      <div class="layout">
+        <aside class="surface profile-card">
+          <div class="profile-summary">
+            <span class="avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></span>
+            <div>
+              <div class="profile-name" id="summary-name">Elaine Chen</div>
+              <div class="profile-meta">Patient ID: GP-10482</div>
+              <span class="status" id="summary-enrolment">Enrolled patient</span>
+            </div>
+          </div>
+          <div class="side-nav" aria-label="Account sections">
+            <div class="active">My Profile</div>
+            <div>My Appointment</div>
+            <div>Prescriptions</div>
+            <div>Message</div>
+          </div>
+        </aside>
+
+        <div class="content">
+          <section class="surface section editable-section" id="personal-section" aria-labelledby="personal-title">
+            <div class="section-title">
+              <div><h2 id="personal-title">Personal information</h2><p class="section-description">Details used to identify and contact you.</p></div>
+              <button class="edit-button primary" id="edit-profile" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 20 4-1 11-11-3-3L5 16zM14 6l3 3"/></svg>Edit Personal Information</button>
+              <div class="edit-actions">
+                <button class="ghost" id="cancel-edit" type="button">Discard Changes</button>
+                <button class="primary" id="save-profile" type="button">Save Personal Information</button>
+              </div>
+            </div>
+            <div class="info-grid">
+              <div class="field" data-key="name"><div class="field-label">Full name</div><div class="field-value">Elaine Chen</div><input aria-label="Full name" value="Elaine Chen" readonly aria-describedby="identity-note"></div>
+              <div class="field"><div class="field-label">Date of birth</div><div class="field-value">14 March 2005</div><input aria-label="Date of birth" type="date" value="2005-03-14" readonly aria-describedby="identity-note"></div>
+              <div class="field" data-key="email"><div class="field-label">Email</div><div class="field-value">elaine.chen@example.nz</div><input aria-label="Email" type="email" value="elaine.chen@example.nz"></div>
+              <div class="field"><div class="field-label">Phone</div><div class="field-value">021 456 7821</div><input aria-label="Phone" type="tel" pattern="[+0-9][0-9 ()-]{6,19}" title="Enter 7–20 characters using numbers, spaces, brackets, + or -." value="021 456 7821"></div>
+              <div class="field"><div class="field-label">Address</div><div class="field-value">Riccarton, Christchurch</div><input aria-label="Address" value="Riccarton, Christchurch"></div>
+              <div class="field"><div class="field-label">Emergency contact name</div><div class="field-value">Lina Chen</div><input aria-label="Emergency contact name" value="Lina Chen"></div>
+              <div class="field"><div class="field-label">Emergency contact phone</div><div class="field-value">021 774 120</div><input aria-label="Emergency contact phone" type="tel" pattern="[+0-9][0-9 ()-]{6,19}" title="Enter 7–20 characters using numbers, spaces, brackets, + or -." value="021 774 120"></div>
+            </div>
+            <p class="identity-note" id="identity-note">To protect your medical record, changes to your legal name or date of birth require identity verification through support.</p>
+            <div class="feedback" id="personal-feedback" role="status" aria-live="polite"></div>
+          </section>
+
+          <section class="surface section editable-section" id="health-section" aria-labelledby="health-title">
+            <div class="section-title">
+              <div><h2 id="health-title">Healthcare preferences</h2><p class="section-description">Information used to support appointments and follow-up care.</p></div>
+              <button class="edit-button primary" id="edit-health" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>Edit Preferences</button>
+              <div class="edit-actions">
+                <button class="ghost" id="cancel-health" type="button">Discard Changes</button>
+                <button class="primary" id="save-health" type="button">Save Preferences</button>
+              </div>
+            </div>
+            <div class="info-grid">
+              <div class="field" data-key="enrolment"><div class="field-label">Enrolment status</div><div class="field-value">Enrolled patient</div><select aria-label="Enrolment status"><option selected>Enrolled patient</option><option>Casual patient</option></select></div>
+              <div class="field"><div class="field-label">Preferred pharmacy</div><div class="field-value">Riccarton Community Pharmacy</div><select aria-label="Preferred pharmacy"><option selected>Riccarton Community Pharmacy</option><option>City Pharmacy Christchurch</option><option>Ilam Pharmacy</option><option>No preferred pharmacy</option></select></div>
+              <div class="field"><div class="field-label">Preferred consultation</div><div class="field-value">Video consultation</div><select aria-label="Preferred consultation"><option selected>Video consultation</option><option>Phone consultation</option></select></div>
+              <div class="field"><div class="field-label">Communication language</div><div class="field-value">English</div><select aria-label="Communication language"><option selected>English</option><option>Mandarin</option></select></div>
+            </div>
+            <div class="feedback" id="health-feedback" role="status" aria-live="polite"></div>
+          </section>
+
+          <section class="surface section" aria-labelledby="privacy-title">
+            <div class="section-title"><div><h2 id="privacy-title">Privacy and communication</h2><p class="section-description">Control routine account notifications.</p></div><button id="change-password" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg>Change Password</button></div>
+            <div class="preferences">
+              <div class="preference-row">
+                <div><div class="preference-title">Appointment reminders</div><div class="preference-meta">Receive reminders before upcoming consultations.</div></div>
+                <label class="switch"><input id="appointment-reminders" type="checkbox" checked aria-label="Appointment reminders"><span></span></label>
+              </div>
+              <div class="preference-row">
+                <div><div class="preference-title">Email notifications</div><div class="preference-meta">Receive booking and account updates by email.</div></div>
+                <label class="switch"><input id="email-notifications" type="checkbox" checked aria-label="Email notifications"><span></span></label>
+              </div>
+            </div>
+            <p class="autosave-note">Notification switches are saved automatically. You do not need to select a Save button.</p>
+            <div class="feedback" id="privacy-feedback" role="status" aria-live="polite"></div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </section>
+
+  <script>
+    (() => {
+      const root = document.getElementById('my-profile-v1');
+      const feedbackTimers = new WeakMap();
+
+      function clearFeedbacks(except) {
+        root.querySelectorAll('.feedback').forEach(element => {
+          if (element !== except) {
+            element.textContent = '';
+            element.classList.remove('error');
+          }
+        });
+      }
+
+      function showFeedback(element, message, isError = false) {
+        clearFeedbacks(element);
+        element.textContent = message;
+        element.classList.toggle('error', isError);
+        clearTimeout(feedbackTimers.get(element));
+        feedbackTimers.set(element, setTimeout(() => {
+          element.textContent = '';
+          element.classList.remove('error');
+        }, 6000));
+      }
+
+      function setupEditor(sectionId, editId, saveId, cancelId, feedbackId) {
+        const section = root.querySelector(sectionId);
+        const edit = root.querySelector(editId);
+        const save = root.querySelector(saveId);
+        const cancel = root.querySelector(cancelId);
+        const feedback = root.querySelector(feedbackId);
+        let snapshot = [];
+
+        edit.addEventListener('click', () => {
+          snapshot = [...section.querySelectorAll('input, select')].map(el => el.value);
+          section.classList.add('editing');
+          showFeedback(feedback, 'Edit the fields, then save or discard your changes.');
+          const first = section.querySelector('input:not([readonly]), select');
+          if (first) first.focus();
+        });
+        cancel.addEventListener('click', () => {
+          [...section.querySelectorAll('input, select')].forEach((el, index) => el.value = snapshot[index]);
+          section.classList.remove('editing');
+          showFeedback(feedback, 'Changes discarded.');
+        });
+        save.addEventListener('click', () => {
+          const fields = [...section.querySelectorAll('.field')];
+          const controls = fields.map(field => field.querySelector('input, select'));
+          const empty = controls.some(control => !control.value.trim());
+          const invalid = controls.find(control => !control.validity.valid);
+          if (empty || invalid) {
+            const isPhone = invalid && invalid.type === 'tel';
+            showFeedback(feedback, empty ? 'Please complete all fields.' : isPhone ? 'Please enter a valid phone number.' : 'Please enter a valid email address.', true);
+            if (invalid) invalid.focus();
+            return;
+          }
+          fields.forEach((field, index) => field.querySelector('.field-value').textContent = controls[index].value);
+          const nameField = section.querySelector('[data-key="name"] .field-value');
+          if (nameField) root.querySelector('#summary-name').textContent = nameField.textContent;
+          const enrolmentField = section.querySelector('[data-key="enrolment"] .field-value');
+          if (enrolmentField) root.querySelector('#summary-enrolment').textContent = enrolmentField.textContent;
+          section.classList.remove('editing');
+          showFeedback(feedback, 'Information updated successfully.');
+        });
+      }
+
+      setupEditor('#personal-section', '#edit-profile', '#save-profile', '#cancel-edit', '#personal-feedback');
+      setupEditor('#health-section', '#edit-health', '#save-health', '#cancel-health', '#health-feedback');
+
+      const privacyFeedback = root.querySelector('#privacy-feedback');
+      ['#appointment-reminders', '#email-notifications'].forEach(selector => {
+        root.querySelector(selector).addEventListener('change', event => {
+          const label = selector === '#appointment-reminders' ? 'Appointment reminders' : 'Email notifications';
+          showFeedback(privacyFeedback, `${label} ${event.target.checked ? 'enabled' : 'disabled'}.`);
+        });
+      });
+      root.querySelector('#change-password').addEventListener('click', () => {
+        showFeedback(privacyFeedback, 'A secure change-password flow would open here.');
+      });
+    })();
+  </script>
+</div>
+
+<div data-include="footer"></div>
+<script href="js/main.js"></script>
+
+    </body>
+</html>
